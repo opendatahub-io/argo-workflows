@@ -193,3 +193,4 @@ require (
 )
 
 replace github.com/go-git/go-git/v5 => github.com/argoproj-labs/go-git/v5 v5.4.4
+replace golang.org/x/net v0.0.0-20220225172249-27dd8689420f => golang.org/x/net v0.17.0
