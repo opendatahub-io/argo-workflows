@@ -196,3 +196,5 @@ replace github.com/go-git/go-git/v5 => github.com/argoproj-labs/go-git/v5 v5.4.4
 replace golang.org/x/net v0.0.0-20220225172249-27dd8689420f => golang.org/x/net v0.17.0
 replace google.golang.org/grpc v1.44.0 => google.golang.org/grpc v1.58.3
 replace gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b => gopkg.in/yaml.v3 v3.0.1
+replace github.com/cloudevents/sdk-go/v2 v2.8.0 => github.com/cloudevents/sdk-go/v2 v2.15.1
+replace github.com/go-jose/go-jose/v3 v3.0.0 => github.com/go-jose/go-jose/v3 v3.0.1
