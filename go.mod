@@ -201,3 +201,6 @@ replace github.com/go-jose/go-jose/v3 v3.0.0 => github.com/go-jose/go-jose/v3 v3
 replace golang.org/x/crypto v0.14.0 => golang.org/x/crypto v0.17.0
 replace github.com/nats-io/nats-server/v2 v2.7.2 => github.com/nats-io/nats-server/v2 v2.10.2
 replace github.com/labstack/echo v3.2.1+incompatible => github.com/labstack/echo/v4 v4.9.0
+replace github.com/argoproj/argo-events v0.17.1-0.20220223155401-ddda8800f9f8 => github.com/argoproj/argo-events v1.7.1
+replace github.com/dgrijalva/jwt-go v3.2.0+incompatible => github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
+replace github.com/nats-io/nats-streaming-server v0.24.1 => github.com/nats-io/nats-streaming-server v0.24.3
