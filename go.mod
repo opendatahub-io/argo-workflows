@@ -204,4 +204,4 @@ replace github.com/labstack/echo v3.2.1+incompatible => github.com/labstack/echo
 replace github.com/argoproj/argo-events v0.17.1-0.20220223155401-ddda8800f9f8 => github.com/argoproj/argo-events v1.7.1
 replace github.com/dgrijalva/jwt-go v3.2.0+incompatible => github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
 replace github.com/nats-io/nats-streaming-server v0.24.1 => github.com/nats-io/nats-streaming-server v0.24.3
-replace github.com/cloudevents/sdk-go v1.7.1 => github.com/cloudevents/sdk-go/v2 v2.15.1
+replace github.com/cloudevents/sdk-go/v2 v2.10.0 => github.com/cloudevents/sdk-go/v2 v2.15.1
