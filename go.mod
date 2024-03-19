@@ -223,6 +223,4 @@ replace github.com/dgrijalva/jwt-go v3.2.0+incompatible => github.com/dgrijalva/
 
 replace github.com/nats-io/nats-streaming-server v0.24.1 => github.com/nats-io/nats-streaming-server v0.24.3
 
-replace github.com/cloudevents/sdk-go/v2 v2.10.0 => github.com/cloudevents/sdk-go/v2 v2.15.1
-
 replace google.golang.org/grpc v1.56.2 => google.golang.org/grpc v1.58.3
