@@ -1,0 +1,75 @@
+name: Build images for Main branch
+on:
+  push:
+    branches:
+      - main
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+env:
+  QUAY_ORG: ${{ vars.QUAY_ORG }}
+  QUAY_ID: ${{ secrets.QUAY_ROBOT_USERNAME }}
+  QUAY_TOKEN: ${{ secrets.QUAY_ROBOT_TOKEN }}
+  SOURCE_BRANCH: main
+jobs:
+  build-main-images:
+    continue-on-error: false
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: ds-pipelines-argo-argoexec
+            dockerfile: Dockerfile
+            target_stage: argoexec
+          - image: ds-pipelines-argo-argocli
+            dockerfile: Dockerfile
+            target_stage: argocli
+          - image: ds-pipelines-argo-server
+            dockerfile: Dockerfile
+            target_stage: argo-ui
+          - image: ds-pipelines-argo-workflowcontroller
+            dockerfile: Dockerfile
+            target_stage: workflow-controller
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generate Tag
+        shell: bash
+        id: tags
+        env:
+          SOURCE_BRANCH: ${{ env.SOURCE_BRANCH }}
+        run: |
+          commit_sha=${{ github.event.after }}
+          tag=${SOURCE_BRANCH}-${commit_sha:0:7}
+          echo "tag=${tag}" >> $GITHUB_OUTPUT
+      - name: Go Build Cache for Docker
+        uses: actions/cache@v3
+        with:
+          path: go-build-cache
+          key: ${{ runner.os }}-go-build-cache-${{ hashFiles('**/go.sum') }}
+      - name: inject go-build-cache into docker
+        uses: reproducible-containers/buildkit-cache-dance@v2.1.2
+        with:
+          cache-source: go-build-cache
+      - name: Build Image
+        uses: ./.github/actions/build
+        env:
+          IMG: quay.io/${{ env.QUAY_ORG }}/${{ matrix.image }}:${{ steps.tags.outputs.tag }}
+          TARGET_IMAGE_TAG: ${{ steps.tags.outputs.tag }}
+        with:
+          OVERWRITE: true
+          IMAGE_REPO: ${{ matrix.image }}
+          DOCKERFILE: ${{ matrix.dockerfile }}
+          TARGET_STAGE: ${{ matrix.target_stage }}
+          GH_REPO: ${{ github.repository }}
+      - name: Tag latest
+        shell: bash
+        env:
+          IMG: quay.io/${{ env.QUAY_ORG }}/${{ matrix.image }}
+          NEWEST_TAG: ${{ steps.tags.outputs.tag }}
+          SOURCE_BRANCH: ${{ env.SOURCE_BRANCH }}
+        run: |
+          docker tag ${IMG}:${NEWEST_TAG} ${IMG}:latest
+          docker push ${IMG}:latest
+          docker tag ${IMG}:${NEWEST_TAG} ${IMG}:${SOURCE_BRANCH}
+          docker push ${IMG}:${SOURCE_BRANCH}
