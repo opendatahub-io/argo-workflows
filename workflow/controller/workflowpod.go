@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strconv"
 	"time"
@@ -520,8 +521,16 @@ func substitutePodParams(pod *apiv1.Pod, globalParams common.Parameters, tmpl *w
 }
 
 func (woc *wfOperationCtx) newInitContainer(tmpl *wfv1.Template) apiv1.Container {
+	argoExecPath := os.Getenv("ARGO_EXEC_PATH")
+	if argoExecPath != "" {
+		log.Infof("Using argoexec path from environment variable: %s", argoExecPath)
+	} else {
+		argoExecPath = "argoexec"
+	}
+
 	ctr := woc.newExecContainer(common.InitContainerName, tmpl)
-	ctr.Command = []string{"argoexec", "init", "--loglevel", getExecutorLogLevel(), "--log-format", woc.controller.executorLogFormat()}
+	ctr.Command = []string{argoExecPath, "init", "--loglevel", getExecutorLogLevel(), "--log-format", woc.controller.executorLogFormat()}
+
 	return *ctr
 }
 

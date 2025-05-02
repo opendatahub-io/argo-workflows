@@ -1,6 +1,6 @@
 ARG SOURCE_CODE=.
 
-FROM registry.redhat.io/ubi8/go-toolset:1.21 as builder
+FROM registry.access.redhat.com/ubi9/go-toolset:1.22 as builder
 
 # Build args to be used at this step
 ARG SOURCE_CODE
@@ -16,10 +16,10 @@ COPY ${SOURCE_CODE}/ ./
 # Set the /workspace directory as safe for Git
 RUN git config --global --add safe.directory /workspace
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build make dist/workflow-controller GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE} CGO_ENABLED=1 GOEXPERIMENT=strictfipsruntime go build  -tags strictfipsruntime -v  -o dist/workflow-controller ./cmd/workflow-controller
 
 ####################################################################################################
-FROM registry.redhat.io/ubi8/ubi-minimal:8.10 AS workflow-controller
+FROM registry.redhat.io/ubi9/ubi-minimal:9.5 AS workflow-controller
 
 
 ARG CI_CONTAINER_VERSION

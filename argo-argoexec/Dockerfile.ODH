@@ -1,6 +1,6 @@
 ARG SOURCE_CODE=.
 
-FROM registry.redhat.io/ubi8/go-toolset:1.21 as builder
+FROM registry.access.redhat.com/ubi9/go-toolset:1.22 as builder
 
 # Build args to be used at this step
 ARG SOURCE_CODE
@@ -16,11 +16,11 @@ COPY ${SOURCE_CODE}/ ./
 # Set the /workspace directory as safe for Git
 RUN git config --global --add safe.directory /workspace
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build make dist/argoexec GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
-
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE} CGO_ENABLED=1 GOEXPERIMENT=strictfipsruntime go build -tags strictfipsruntime -v  -o dist/argoexec-fips ./cmd/argoexec
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE} CGO_ENABLED=0 go build -ldflags '-extldflags -static' -v  -o dist/argoexec ./cmd/argoexec
 
 ####################################################################################################
-FROM registry.redhat.io/ubi8/ubi-minimal:8.10 AS argoexec
+FROM registry.redhat.io/ubi9/ubi-minimal:9.5 AS argoexec
 
 
 ARG CI_CONTAINER_VERSION
@@ -28,11 +28,12 @@ ARG CI_CONTAINER_VERSION
 WORKDIR /bin
 
 COPY --from=builder /workspace/dist/argoexec /bin/
+COPY --from=builder /workspace/dist/argoexec-fips /bin/
 COPY --from=builder /etc/mime.types /etc/mime.types
 COPY --from=builder /workspace/hack/ssh_known_hosts /etc/ssh/
 COPY --from=builder /workspace/hack/nsswitch.conf /etc/
 
-RUN chmod +x /bin/argoexec
+RUN chmod +x /bin/argoexec && chmod +x /bin/argoexec-fips
 
 USER 2000
 
