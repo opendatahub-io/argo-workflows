@@ -1,21 +1,22 @@
 apiVersion: tekton.dev/v1
 kind: PipelineRun
-#
+#test
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/opendatahub-io/argo-workflows?rev={{revision}}
+    build.appstudio.openshift.io/repo: https://github.com/opendatahub-io/maas-billing?rev={{revision}}
     build.appstudio.redhat.com/commit_sha: '{{revision}}'
+    build.appstudio.redhat.com/pull_request_number: '{{pull_request_number}}'
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
-    pipelinesascode.tekton.dev/cancel-in-progress: "false"
+    pipelinesascode.tekton.dev/cancel-in-progress: "true"
     pipelinesascode.tekton.dev/max-keep-runs: "3"
-    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
+    pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch
       == "stable"
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: opendatahub-builds
-    appstudio.openshift.io/component: odh-data-science-pipelines-argo-argoexec
+    appstudio.openshift.io/component: odh-data-science-pipelines-argo-workflowcontroller
     pipelines.appstudio.openshift.io/type: build
-  name: odh-data-science-pipelines-argo-argoexec-on-push
+  name: odh-data-science-pipelines-argo-workflowcontroller-on-pull
   namespace: open-data-hub-tenant
 spec:
   params:
@@ -23,10 +24,12 @@ spec:
     value: '{{source_url}}'
   - name: revision
     value: '{{revision}}'
+  - name: pr-number
+    value: "{{pull_request.number}}"
   - name: output-image
-    value: quay.io/opendatahub/ds-pipelines-argo-argoexec:odh-pr-{{revision}}
+    value: quay.io/opendatahub/ds-pipelines-argo-workflowcontroller:odh-pr-$(params.pr-number)
   - name: dockerfile
-    value: argo-argoexec/Dockerfile.ODH
+    value: argo-workflowcontroller/Dockerfile.ODH
   - name: path-context
     value: .
   - name: build-platforms
@@ -35,17 +38,19 @@ spec:
   - name: additional-tags
     value:
     - '{{target_branch}}-{{revision}}'
+  - name: pipeline-type
+    value: pull-request
   pipelineRef:
     resolver: git
     params:
     - name: url
       value: https://github.com/opendatahub-io/odh-konflux-central.git
     - name: revision
-      value: 'main'
+      value: main
     - name: pathInRepo
       value: pipeline/multi-arch-container-build.yaml
   taskRunTemplate:
-    serviceAccountName: build-pipeline-odh-data-science-pipelines-argo-argoexec
+    serviceAccountName: build-pipeline-odh-data-science-pipelines-argo-workflowcontroller
   workspaces:
   - name: git-auth
     secret:
