@@ -271,7 +271,7 @@ func matchConditions(jsonBytes []byte, successReqs labels.Requirements, failReqs
 	for _, req := range failReqs {
 		failed := req.Matches(ls)
 		msg := fmt.Sprintf("failure condition '%s' evaluated %v", req, failed)
-		log.Info(msg)
+		log.Infof("failure condition '%s' evaluated %v", req, failed)
 		if failed {
 			// We return false here to not retry when failure conditions met.
 			return false, errors.Errorf(errors.CodeBadRequest, "%s", msg)
