@@ -202,7 +202,7 @@ func NewDocGeneratorContext() *DocGeneratorContext {
 		doneFields: make(Set),
 		queue: []string{
 			"io.argoproj.workflow.v1alpha1.Workflow", "io.argoproj.workflow.v1alpha1.CronWorkflow",
-			"io.argoproj.workflow.v1alpha1.WorkflowTemplate",
+			"io.argoproj.workflow.v1alpha1.WorkflowTemplate", "io.argoproj.workflow.v1alpha1.WorkflowEventBinding",
 		},
 		external: []string{},
 		index:    make(map[string]Set),
