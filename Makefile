@@ -466,7 +466,6 @@ $(GOPATH)/bin/golangci-lint: Makefile
 
 .PHONY: lint
 lint: server/static/files.go $(GOPATH)/bin/golangci-lint
-	echo "Golang Path: $(GOPATH)"
 	rm -Rf v3 vendor
 	# If you're using `woc.wf.Spec` or `woc.execWf.Status` your code probably won't work with WorkflowTemplate.
 	# * Change `woc.wf.Spec` to `woc.execWf.Spec`.
