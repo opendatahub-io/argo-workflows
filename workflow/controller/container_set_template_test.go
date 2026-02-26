@@ -143,7 +143,6 @@ spec:
 				{Name: "var-run-argo", MountPath: common.VarRunArgoPath},
 			}, c.VolumeMounts)
 		default:
-			t.Fatal(c.Name)
 			t.Fatalf("unexpected container name %s", c.Name)
 		}
 	}
