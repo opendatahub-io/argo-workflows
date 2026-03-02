@@ -33,7 +33,7 @@ import (
 
 var (
 	argoKubeOffloadNodeStatusRepo = sqldb.ExplosiveOffloadNodeStatusRepo
-	ErrNoArgoServer               = errors.New("this is impossible if you are not using the Argo Server, see %s" + help.CLI())
+	ErrNoArgoServer               = errors.New("this is impossible if you are not using the Argo Server, see " + help.CLI())
 )
 
 type argoKubeClient struct {
