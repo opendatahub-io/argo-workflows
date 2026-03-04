@@ -2,6 +2,7 @@ package apiclient
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	events "github.com/argoproj/argo-events/pkg/client/clientset/versioned"
@@ -32,7 +33,7 @@ import (
 
 var (
 	argoKubeOffloadNodeStatusRepo = sqldb.ExplosiveOffloadNodeStatusRepo
-	ErrNoArgoServer               = fmt.Errorf("this is impossible if you are not using the Argo Server, see %s", help.CLI())
+	ErrNoArgoServer               = errors.New("this is impossible if you are not using the Argo Server, see " + help.CLI())
 )
 
 type argoKubeClient struct {

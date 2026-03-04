@@ -1,7 +1,7 @@
 package template
 
 import (
-	"fmt"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -9,11 +9,11 @@ import (
 
 func Test_Validate(t *testing.T) {
 	t.Run("InvalidTemplate", func(t *testing.T) {
-		err := Validate("{{", func(tag string) error { return fmt.Errorf("") })
+		err := Validate("{{", func(tag string) error { return errors.New("") })
 		require.Error(t, err)
 	})
 	t.Run("InvalidTag", func(t *testing.T) {
-		err := Validate("{{foo}}", func(tag string) error { return fmt.Errorf("%s", tag) })
+		err := Validate("{{foo}}", func(tag string) error { return errors.New(tag) })
 		require.EqualError(t, err, "foo")
 	})
 	t.Run("Simple", func(t *testing.T) {
@@ -21,7 +21,7 @@ func Test_Validate(t *testing.T) {
 		require.NoError(t, err)
 	})
 	t.Run("Expression", func(t *testing.T) {
-		err := Validate("{{=foo}}", func(tag string) error { return fmt.Errorf("%s", tag) })
+		err := Validate("{{=foo}}", func(tag string) error { return errors.New(tag) })
 		require.NoError(t, err)
 	})
 }

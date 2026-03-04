@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"fmt"
 
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/time/rate"
@@ -110,7 +109,7 @@ func (wfc *WorkflowController) executorImage() string {
 	if v := wfc.Config.GetExecutor().Image; v != "" {
 		return v
 	}
-	return fmt.Sprintf("quay.io/argoproj/argoexec:%s", argo.ImageTag())
+	return "quay.io/argoproj/argoexec:" + argo.ImageTag()
 }
 
 func (wfc *WorkflowController) executorLogFormat() string {

@@ -41,7 +41,7 @@ jobs:
       codegen: ${{ steps.changed-files.outputs.codegen_any_modified == 'true' }}
       lint: ${{ steps.changed-files.outputs.lint_any_modified == 'true' }}
       ui: ${{ steps.changed-files.outputs.ui_any_modified == 'true' }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
@@ -126,13 +126,13 @@ jobs:
     name: Unit Tests
     needs: [ changed-files ]
     if: ${{ needs.changed-files.outputs.tests == 'true' }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
         with:
-          go-version: "1.24"
+          go-version-file: go.mod
           cache: true
       - run: make test STATIC_FILES=false GOTEST='go test -p 20 -covermode=atomic -coverprofile=coverage.out'
       - name: Upload coverage report
@@ -154,7 +154,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
         with:
-          go-version: "1.24"
+          go-version-file: go.mod
           cache: true
       # windows run does not use makefile target because it does a lot more than just testing and is not cross-platform compatible
       - run: go test -p 20 -covermode=atomic -coverprofile='coverage.out' $(go list ./... | select-string -Pattern 'github.com/argoproj/argo-workflows/v3/workflow/controller' , 'github.com/argoproj/argo-workflows/v3/server' -NotMatch)
@@ -172,7 +172,7 @@ jobs:
   argo-images:
     name: argo-images
     # needs: [ lint ]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
       fail-fast: false
@@ -203,7 +203,7 @@ jobs:
     name: E2E Tests
     needs: [ changed-files, argo-images ]
     if: ${{ needs.changed-files.outputs.e2e-tests == 'true' }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     # These tests usually finish in ~25m, but occasionally they take much longer due to resource
     # contention on the runner, which we have no control over.
     timeout-minutes: 60
@@ -270,7 +270,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
         with:
-          go-version: "1.24"
+          go-version-file: go.mod
           cache: true
       - name: Install Java for the SDK
         if: ${{matrix.test == 'test-java-sdk'}}
@@ -386,7 +386,7 @@ jobs:
     name: E2E Tests - Composite result
     needs: [ e2e-tests ]
     if: ${{ always() }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - run: |
           result="${{ needs.e2e-tests.result }}"
@@ -401,7 +401,7 @@ jobs:
     name: Codegen
     needs: [ changed-files ]
     if: ${{ needs.changed-files.outputs.codegen == 'true' }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
       GOPATH: /home/runner/go
@@ -409,7 +409,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
         with:
-          go-version: "1.24"
+          go-version-file: go.mod
           cache: true
       - name: Install protoc
         run: |
@@ -438,7 +438,7 @@ jobs:
     name: Lint
     needs: [ changed-files ]
     if: ${{ needs.changed-files.outputs.lint == 'true' }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 15 # must be strictly greater than the timeout in .golangci.yml
     env:
       GOPATH: /home/runner/go
@@ -446,7 +446,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
         with:
-          go-version: "1.24"
+          go-version-file: go.mod
           cache: true
       - run: make lint STATIC_FILES=false
       # if lint makes changes that are not in the PR, fail the build
@@ -460,7 +460,7 @@ jobs:
     name: UI
     needs: [ changed-files ]
     if: ${{ needs.changed-files.outputs.ui == 'true' }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 6
     env:
       NODE_OPTIONS: --max-old-space-size=4096
