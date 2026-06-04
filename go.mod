@@ -1,8 +1,6 @@
 module github.com/argoproj/argo-workflows/v3
 
-go 1.26
-
-toolchain go1.26.2
+go 1.25.7
 
 require (
 	cloud.google.com/go/storage v1.50.0
