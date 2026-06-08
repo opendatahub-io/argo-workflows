@@ -1,8 +1,8 @@
 ARG SOURCE_CODE=.
-ARG BUILDPLATFORM=linux/amd64
 ARG TARGETOS=linux
 ARG TARGETARCH=amd64
 
+# BUILDPLATFORM is auto-set by BuildKit; do not set a default or GOFIPS140 will panic under QEMU on arm64 Macs
 FROM --platform=$BUILDPLATFORM registry.access.redhat.com/ubi9/go-toolset:1.26.2-1777889793@sha256:1c1259373e6feb4b57de490452379c40888cf6e876154cd2ace17eae9c64a7ea as builder
 
 # Build args to be used at this step
