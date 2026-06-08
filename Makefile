@@ -356,7 +356,7 @@ endif
 $(GOPATH)/bin/swagger: Makefile
 # update this in Nix when upgrading it here
 ifneq ($(USE_NIX), true)
-	go install github.com/go-swagger/go-swagger/cmd/swagger@v0.31.0
+	go install github.com/go-swagger/go-swagger/cmd/swagger@v0.33.0
 endif
 $(GOPATH)/bin/goimports: Makefile
 # update this in Nix when upgrading it here
@@ -462,7 +462,7 @@ dist/manifests/%: manifests/%
 # lint/test/etc
 
 $(GOPATH)/bin/golangci-lint: Makefile
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b `go env GOPATH`/bin v2.12.2
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/v2.12.2/install.sh | sh -s -- -b `go env GOPATH`/bin v2.12.2
 
 .PHONY: lint
 lint: server/static/files.go $(GOPATH)/bin/golangci-lint

@@ -12,7 +12,6 @@ RUN dnf install -y \
     make \
     ca-certificates \
     wget \
-    curl \
     gcc \
     bash \
     mailcap \
