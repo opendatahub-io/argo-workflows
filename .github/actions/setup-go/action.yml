@@ -1,0 +1,18 @@
+name: "Set up Go"
+description: "Installs Go from Red Hat go-toolset image (includes FIPS support)"
+runs:
+  using: composite
+  steps:
+    - name: Extract Go from go-toolset
+      shell: bash
+      env:
+        GO_TOOLSET_IMAGE: "registry.access.redhat.com/ubi9/go-toolset:1.26.2-1777889793@sha256:1c1259373e6feb4b57de490452379c40888cf6e876154cd2ace17eae9c64a7ea"
+      run: |
+        docker create --name go-toolset "$GO_TOOLSET_IMAGE"
+        docker cp go-toolset:/usr/lib/golang $HOME/go-toolset
+        docker rm go-toolset
+        echo "GOROOT=$HOME/go-toolset" >> $GITHUB_ENV
+        echo "$HOME/go-toolset/bin" >> $GITHUB_PATH
+    - name: Verify Go installation
+      shell: bash
+      run: go version
