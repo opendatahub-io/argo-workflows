@@ -1,9 +1,13 @@
 ARG SOURCE_CODE=.
+ARG TARGETOS=linux
+ARG TARGETARCH=amd64
 
-FROM registry.access.redhat.com/ubi9/go-toolset:1.26.2-1777889793@sha256:1c1259373e6feb4b57de490452379c40888cf6e876154cd2ace17eae9c64a7ea as builder
+FROM --platform=$BUILDPLATFORM registry.access.redhat.com/ubi9/go-toolset:1.26.2-1777889793@sha256:1c1259373e6feb4b57de490452379c40888cf6e876154cd2ace17eae9c64a7ea as builder
 
 # Build args to be used at this step
 ARG SOURCE_CODE
+ARG TARGETOS
+ARG TARGETARCH
 WORKDIR /workspace
 
 USER root
@@ -16,7 +20,7 @@ COPY ${SOURCE_CODE}/ ./
 # Set the /workspace directory as safe for Git
 RUN git config --global --add safe.directory /workspace
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build CGO_ENABLED=0 GOFIPS140=v1.0.0 go build -tags no_openssl -v -o dist/workflow-controller ./cmd/workflow-controller
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} GOFIPS140=v1.0.0 go build -tags no_openssl -v -o dist/workflow-controller ./cmd/workflow-controller
 
 ####################################################################################################
 FROM registry.redhat.io/ubi9/ubi-minimal:9.5 AS workflow-controller
