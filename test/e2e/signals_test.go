@@ -25,6 +25,8 @@ type SignalsSuite struct {
 }
 
 func (s *SignalsSuite) TestStopBehavior() {
+	// Disabled upstream: https://github.com/argoproj/argo-workflows/commit/9291d2242f39d75c4a13fe23f506fde772aa5510
+	s.T().Skip("this test is flaky, address this test flakiness and renable")
 	s.Given().
 		Workflow("@functional/stop-terminate.yaml").
 		When().
