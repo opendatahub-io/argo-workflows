@@ -3,19 +3,20 @@ ARG GIT_COMMIT=unknown
 ARG GIT_TAG=unknown
 ARG GIT_TREE_STATE=unknown
 
-FROM golang:1.25.7-alpine3.22 as builder
+FROM registry.access.redhat.com/ubi9/go-toolset:1.26.2-1777889793@sha256:1c1259373e6feb4b57de490452379c40888cf6e876154cd2ace17eae9c64a7ea as builder
 
-# libc-dev to build openapi-gen
-RUN apk update && apk add --no-cache \
+USER root
+
+RUN dnf install -y \
     git \
     make \
     ca-certificates \
     wget \
     curl \
     gcc \
-    libc-dev \
     bash \
-    mailcap
+    mailcap \
+    && dnf clean all
 
 WORKDIR /go/src/github.com/argoproj/argo-workflows
 COPY go.mod .
@@ -51,7 +52,7 @@ ARG GIT_COMMIT
 ARG GIT_TAG
 ARG GIT_TREE_STATE
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build make dist/argoexec GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOFIPS140=v1.0.0 make dist/argoexec GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
 
 ####################################################################################################
 
@@ -61,7 +62,7 @@ ARG GIT_COMMIT
 ARG GIT_TAG
 ARG GIT_TREE_STATE
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build make dist/workflow-controller GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOFIPS140=v1.0.0 make dist/workflow-controller GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
 
 ####################################################################################################
 
@@ -76,7 +77,7 @@ COPY --from=argo-ui ui/dist/app ui/dist/app
 # update timestamp so that `make` doesn't try to rebuild this -- it was already built in the previous stage
 RUN touch ui/dist/app/index.html
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build STATIC_FILES=true make dist/argo GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOFIPS140=v1.0.0 STATIC_FILES=true make dist/argo GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
 
 ####################################################################################################
 

@@ -147,7 +147,7 @@ jobs:
   tests-windows:
     name: Windows Unit Tests
     needs: [ changed-files ]
-    if: ${{ needs.changed-files.outputs.tests == 'true' }}
+    if: false # Disabled: godebug fips140=auto requires Red Hat go-toolset, which is not available on Windows
     runs-on: windows-2022
     timeout-minutes: 20
     steps:
