@@ -17,3 +17,12 @@ runs:
     - name: Verify Go installation
       shell: bash
       run: go version
+    - name: Cache Go modules and build cache
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4
+      with:
+        path: |
+          ~/go/pkg/mod
+          ~/.cache/go-build
+        key: go-${{ runner.os }}-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          go-${{ runner.os }}-
