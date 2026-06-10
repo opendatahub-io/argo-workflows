@@ -205,14 +205,14 @@ dist/argo-%.gz: dist/argo-%
 	gzip --force --keep dist/argo-$*
 
 dist/argo-%: server/static/files.go $(CLI_PKG_FILES) go.sum
-	CGO_ENABLED=0 GOFIPS140=v1.0.0 $(GOARGS) go build -v -gcflags '${GCFLAGS}' -ldflags '${LDFLAGS} -extldflags -static' -o $@ ./cmd/argo
+	CGO_ENABLED=0 GOFIPS140=v1.0.0 $(GOARGS) go build -tags no_openssl -v -gcflags '${GCFLAGS}' -ldflags '${LDFLAGS} -extldflags -static' -o $@ ./cmd/argo
 
 dist/argo: server/static/files.go $(CLI_PKG_FILES) go.sum
 ifeq ($(shell uname -s),Darwin)
 	# if local, then build fast: use CGO and dynamic-linking
-	GOFIPS140=v1.0.0 go build -v -gcflags '${GCFLAGS}' -ldflags '${LDFLAGS}' -o $@ ./cmd/argo
+	GOFIPS140=v1.0.0 go build -tags no_openssl -v -gcflags '${GCFLAGS}' -ldflags '${LDFLAGS}' -o $@ ./cmd/argo
 else
-	CGO_ENABLED=0 GOFIPS140=v1.0.0 go build -gcflags '${GCFLAGS}' -v -ldflags '${LDFLAGS} -extldflags -static' -o $@ ./cmd/argo
+	CGO_ENABLED=0 GOFIPS140=v1.0.0 go build -tags no_openssl -gcflags '${GCFLAGS}' -v -ldflags '${LDFLAGS} -extldflags -static' -o $@ ./cmd/argo
 endif
 
 argocli-image:
@@ -228,9 +228,9 @@ controller: dist/workflow-controller
 dist/workflow-controller: $(CONTROLLER_PKG_FILES) go.sum
 ifeq ($(shell uname -s),Darwin)
 	# if local, then build fast: use CGO and dynamic-linking
-	GOFIPS140=v1.0.0 go build -gcflags '${GCFLAGS}' -v -ldflags '${LDFLAGS}' -o $@ ./cmd/workflow-controller
+	GOFIPS140=v1.0.0 go build -tags no_openssl -gcflags '${GCFLAGS}' -v -ldflags '${LDFLAGS}' -o $@ ./cmd/workflow-controller
 else
-	CGO_ENABLED=0 GOFIPS140=v1.0.0 go build -gcflags '${GCFLAGS}' -v -ldflags '${LDFLAGS} -extldflags -static' -o $@ ./cmd/workflow-controller
+	CGO_ENABLED=0 GOFIPS140=v1.0.0 go build -tags no_openssl -gcflags '${GCFLAGS}' -v -ldflags '${LDFLAGS} -extldflags -static' -o $@ ./cmd/workflow-controller
 endif
 
 workflow-controller-image:
@@ -239,9 +239,9 @@ workflow-controller-image:
 
 dist/argoexec: $(ARGOEXEC_PKG_FILES) go.sum
 ifeq ($(shell uname -s),Darwin)
-	CGO_ENABLED=0 GOFIPS140=v1.0.0 GOOS=linux GOARCH=amd64 go build -gcflags '${GCFLAGS}' -v -ldflags '${LDFLAGS} -extldflags -static' -o $@ ./cmd/argoexec
+	CGO_ENABLED=0 GOFIPS140=v1.0.0 GOOS=linux GOARCH=amd64 go build -tags no_openssl -gcflags '${GCFLAGS}' -v -ldflags '${LDFLAGS} -extldflags -static' -o $@ ./cmd/argoexec
 else
-	CGO_ENABLED=0 GOFIPS140=v1.0.0 go build -v -gcflags '${GCFLAGS}' -ldflags '${LDFLAGS} -extldflags -static' -o $@ ./cmd/argoexec
+	CGO_ENABLED=0 GOFIPS140=v1.0.0 go build -tags no_openssl -v -gcflags '${GCFLAGS}' -ldflags '${LDFLAGS} -extldflags -static' -o $@ ./cmd/argoexec
 endif
 
 argoexec-image:

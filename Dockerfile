@@ -51,7 +51,7 @@ ARG GIT_COMMIT
 ARG GIT_TAG
 ARG GIT_TREE_STATE
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOFIPS140=v1.0.0 GOFLAGS="-tags=no_openssl" make dist/argoexec GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOFIPS140=v1.0.0 make dist/argoexec GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
 
 ####################################################################################################
 
@@ -61,7 +61,7 @@ ARG GIT_COMMIT
 ARG GIT_TAG
 ARG GIT_TREE_STATE
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOFIPS140=v1.0.0 GOFLAGS="-tags=no_openssl" make dist/workflow-controller GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOFIPS140=v1.0.0 make dist/workflow-controller GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
 
 ####################################################################################################
 
@@ -76,7 +76,7 @@ COPY --from=argo-ui ui/dist/app ui/dist/app
 # update timestamp so that `make` doesn't try to rebuild this -- it was already built in the previous stage
 RUN touch ui/dist/app/index.html
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOFIPS140=v1.0.0 GOFLAGS="-tags=no_openssl" STATIC_FILES=true make dist/argo GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOFIPS140=v1.0.0 STATIC_FILES=true make dist/argo GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
 
 ####################################################################################################
 
