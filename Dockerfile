@@ -1,21 +1,21 @@
-#syntax=docker/dockerfile:1.2
+#syntax=docker/dockerfile:1.22
 ARG GIT_COMMIT=unknown
 ARG GIT_TAG=unknown
 ARG GIT_TREE_STATE=unknown
 
-FROM registry.access.redhat.com/ubi9/go-toolset:1.26.3@sha256:d36470d5258da00f618b7aca9bdaab8e05134aa938bd6c42d9bd17d50ed45e76 as builder
+FROM golang:1.26.1-alpine3.23 AS builder
 
-USER root
-
-RUN dnf install -y \
+# libc-dev to build openapi-gen
+RUN apk update && apk add --no-cache \
     git \
     make \
     ca-certificates \
     wget \
+    curl \
     gcc \
+    libc-dev \
     bash \
-    mailcap \
-    && dnf clean all
+    mailcap
 
 WORKDIR /go/src/github.com/argoproj/argo-workflows
 COPY go.mod .
@@ -26,7 +26,7 @@ COPY . .
 
 ####################################################################################################
 
-FROM node:20-alpine as argo-ui
+FROM node:20-alpine AS argo-ui
 
 RUN apk update && apk add --no-cache git
 
@@ -45,27 +45,27 @@ RUN --mount=type=cache,target=/root/.yarn \
 
 ####################################################################################################
 
-FROM builder as argoexec-build
+FROM builder AS argoexec-build
 
 ARG GIT_COMMIT
 ARG GIT_TAG
 ARG GIT_TREE_STATE
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOFIPS140=v1.0.0 make dist/argoexec GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build make dist/argoexec GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
 
 ####################################################################################################
 
-FROM builder as workflow-controller-build
+FROM builder AS workflow-controller-build
 
 ARG GIT_COMMIT
 ARG GIT_TAG
 ARG GIT_TREE_STATE
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOFIPS140=v1.0.0 make dist/workflow-controller GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build make dist/workflow-controller GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
 
 ####################################################################################################
 
-FROM builder as argocli-build
+FROM builder AS argocli-build
 
 ARG GIT_COMMIT
 ARG GIT_TAG
@@ -76,11 +76,11 @@ COPY --from=argo-ui ui/dist/app ui/dist/app
 # update timestamp so that `make` doesn't try to rebuild this -- it was already built in the previous stage
 RUN touch ui/dist/app/index.html
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOFIPS140=v1.0.0 STATIC_FILES=true make dist/argo GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build STATIC_FILES=true make dist/argo GIT_COMMIT=${GIT_COMMIT} GIT_TAG=${GIT_TAG} GIT_TREE_STATE=${GIT_TREE_STATE}
 
 ####################################################################################################
 
-FROM gcr.io/distroless/static as argoexec-base
+FROM gcr.io/distroless/static-debian13:latest@sha256:28efbe90d0b2f2a3ee465cc5b44f3f2cf5533514cf4d51447a977a5dc8e526d0 AS argoexec-base
 
 COPY --from=argoexec-build /etc/mime.types /etc/mime.types
 COPY hack/ssh_known_hosts /etc/ssh/
@@ -88,7 +88,7 @@ COPY hack/nsswitch.conf /etc/
 
 ####################################################################################################
 
-FROM argoexec-base as argoexec-nonroot
+FROM argoexec-base AS argoexec-nonroot
 
 USER 8737
 
@@ -97,7 +97,7 @@ COPY --chown=8737 --from=argoexec-build /go/src/github.com/argoproj/argo-workflo
 ENTRYPOINT [ "argoexec" ]
 
 ####################################################################################################
-FROM argoexec-base as argoexec
+FROM argoexec-base AS argoexec
 
 COPY --from=argoexec-build /go/src/github.com/argoproj/argo-workflows/dist/argoexec /bin/
 
@@ -105,7 +105,7 @@ ENTRYPOINT [ "argoexec" ]
 
 ####################################################################################################
 
-FROM gcr.io/distroless/static as workflow-controller
+FROM gcr.io/distroless/static-debian13:latest@sha256:28efbe90d0b2f2a3ee465cc5b44f3f2cf5533514cf4d51447a977a5dc8e526d0 AS workflow-controller
 
 USER 8737
 
@@ -117,7 +117,7 @@ ENTRYPOINT [ "workflow-controller" ]
 
 ####################################################################################################
 
-FROM gcr.io/distroless/static as argocli
+FROM gcr.io/distroless/static-debian13:latest@sha256:28efbe90d0b2f2a3ee465cc5b44f3f2cf5533514cf4d51447a977a5dc8e526d0 AS argocli
 
 USER 8737
 

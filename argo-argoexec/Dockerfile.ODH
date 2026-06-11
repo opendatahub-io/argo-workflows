@@ -26,6 +26,7 @@ RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache
 ####################################################################################################
 FROM registry.redhat.io/ubi9/ubi-minimal:9.5 AS argoexec
 
+ENV GODEBUG=fips140=auto
 
 ARG CI_CONTAINER_VERSION
 
@@ -36,8 +37,7 @@ COPY --from=builder /etc/mime.types /etc/mime.types
 COPY --from=builder /workspace/hack/ssh_known_hosts /etc/ssh/
 COPY --from=builder /workspace/hack/nsswitch.conf /etc/
 
-# Symlink needed because the operator sets ARGO_EXEC_PATH=/bin/argoexec-fips when FIPSEnabled
-RUN chmod +x /bin/argoexec && ln -s /bin/argoexec /bin/argoexec-fips
+RUN chmod +x /bin/argoexec
 
 USER 2000
 

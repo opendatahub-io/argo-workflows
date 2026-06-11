@@ -4,8 +4,6 @@ go 1.26
 
 toolchain go1.26.3
 
-godebug fips140=auto
-
 require (
 	cloud.google.com/go/storage v1.50.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.8.2
