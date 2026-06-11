@@ -21,7 +21,7 @@ COPY ${SOURCE_CODE}/ ./
 # Set the /workspace directory as safe for Git
 RUN git config --global --add safe.directory /workspace
 
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} GOFIPS140=v1.0.0 go build -tags no_openssl -v -o dist/argoexec ./cmd/argoexec
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build GOTOOLCHAIN=local CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} GOFIPS140=v1.0.0 go build -tags no_openssl -v -o dist/argoexec ./cmd/argoexec
 
 ####################################################################################################
 FROM registry.redhat.io/ubi9/ubi-minimal:9.5 AS argoexec
