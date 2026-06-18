@@ -26,7 +26,6 @@ RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache
 ####################################################################################################
 FROM registry.redhat.io/ubi9/ubi-minimal:9.5 AS workflow-controller
 
-ENV GODEBUG=fips140=on
 
 ARG CI_CONTAINER_VERSION
 
