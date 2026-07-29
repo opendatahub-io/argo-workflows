@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"golang.org/x/net/http2"
-	"golang.org/x/net/http2/h2c"
+	"golang.org/x/net/http2/h2c" //nolint:staticcheck // h2c replacement requires broader refactor beyond CVE scope
 )
 
 func IncomingHeaderMatcher(key string) (string, bool) {
@@ -48,7 +48,7 @@ func IncomingHeaderMatcher(key string) (string, bool) {
 // to an HTTP/2 connection which is understandable to s.ServeConn. (s.ServeConn
 // understands HTTP/2 except for the h2c part of it.)"
 func NewMuxHandler(grpcServerHandler http.Handler, httpServerHandler http.Handler) http.Handler {
-	return h2c.NewHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return h2c.NewHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { //nolint:staticcheck // h2c replacement requires broader refactor beyond CVE scope
 		// Match against "Content-Type", which is guaranteed to start with "application/grpc" for gRPC requests.
 		// Spec: https://chromium.googlesource.com/external/github.com/grpc/grpc/+/HEAD/doc/PROTOCOL-HTTP2.md
 		if r.ProtoMajor == 2 && strings.HasPrefix(r.Header.Get("Content-Type"), "application/grpc") {

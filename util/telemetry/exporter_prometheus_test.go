@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"sync"
 	"testing"
@@ -19,17 +20,23 @@ import (
 const testScopeName string = "argo-workflows-test"
 
 func TestDisablePrometheusServer(t *testing.T) {
+	// Use a random free port to avoid false passes when something else listens on 9090
+	l, err := net.Listen("tcp", "localhost:0")
+	require.NoError(t, err)
+	port := l.Addr().(*net.TCPAddr).Port
+	l.Close()
+
 	config := Config{
 		Enabled: false,
 		Path:    DefaultPrometheusServerPath,
-		Port:    DefaultPrometheusServerPort,
+		Port:    port,
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	m, err := NewMetrics(ctx, testScopeName, testScopeName, &config)
 	require.NoError(t, err)
 	m.RunPrometheusServer(ctx, false)
-	resp, err := http.Get(fmt.Sprintf("http://localhost:%d%s", DefaultPrometheusServerPort, DefaultPrometheusServerPath))
+	resp, err := http.Get(fmt.Sprintf("http://localhost:%d%s", port, DefaultPrometheusServerPath))
 	if resp != nil {
 		defer resp.Body.Close()
 	}

@@ -16,7 +16,6 @@ definitions:
                     Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
                     TODO: how do we prevent errors in the filesystem from compromising the machine
-                    +optional
                 type: string
             partition:
                 description: |-
@@ -24,14 +23,12 @@ definitions:
                     If omitted, the default is to mount by volume name.
                     Examples: For volume /dev/sda1, you specify the partition as "1".
                     Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty).
-                    +optional
                 format: int32
                 type: integer
             readOnly:
                 description: |-
                     readOnly value true will force the readOnly setting in VolumeMounts.
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
-                    +optional
                 type: boolean
             volumeID:
                 description: |-
@@ -51,17 +48,15 @@ definitions:
         title: Affinity is a group of affinity scheduling rules.
         type: object
     Amount:
-        description: +kubebuilder:validation:Type=number
         title: Amount represent a numeric amount.
         type: object
     AnyString:
         description: |-
-            It will unmarshall int64, int32, float64, float32, boolean, a plain string and represents it as string.
-            It will marshall back to string - marshalling is not symmetric.
-        title: It's JSON type is just string.
+            - It will unmarshall int64, int32, float64, float32, boolean, a plain string and represents it as string.
+            - It will marshall back to string - marshalling is not symmetric.
+        title: '- It''s JSON type is just string.'
         type: string
     AppArmorProfile:
-        description: +union
         properties:
             localhostProfile:
                 description: |-
@@ -69,14 +64,12 @@ definitions:
                     The profile must be preconfigured on the node to work.
                     Must match the loaded name of the profile.
                     Must be set if and only if type is "Localhost".
-                    +optional
                 type: string
             type:
                 $ref: '#/definitions/AppArmorProfileType'
         title: AppArmorProfile defines a pod or container's AppArmor settings.
         type: object
     AppArmorProfileType:
-        description: +enum
         type: string
     ArchiveStrategy:
         description: ArchiveStrategy describes how to archive files/directory when saving artifacts
@@ -94,10 +87,7 @@ definitions:
             artifacts:
                 $ref: '#/definitions/Artifacts'
             parameters:
-                description: |-
-                    Parameters is the list of parameters to pass to the template or workflow
-                    +patchStrategy=merge
-                    +patchMergeKey=name
+                description: Parameters is the list of parameters to pass to the template or workflow
                 items:
                     $ref: '#/definitions/Parameter'
                 type: array
@@ -307,10 +297,8 @@ definitions:
                 type: boolean
         type: object
     AzureDataDiskCachingMode:
-        description: +enum
         type: string
     AzureDataDiskKind:
-        description: +enum
         type: string
     AzureDiskVolumeSource:
         properties:
@@ -327,8 +315,6 @@ definitions:
                     fsType is Filesystem type to mount.
                     Must be a filesystem type supported by the host operating system.
                     Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-                    +optional
-                    +default="ext4"
                 type: string
             kind:
                 $ref: '#/definitions/AzureDataDiskKind'
@@ -336,8 +322,6 @@ definitions:
                 description: |-
                     readOnly Defaults to false (read/write). ReadOnly here will force
                     the ReadOnly setting in VolumeMounts.
-                    +optional
-                    +default=false
                 type: boolean
         title: AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
         type: object
@@ -347,7 +331,6 @@ definitions:
                 description: |-
                     readOnly defaults to false (read/write). ReadOnly here will force
                     the ReadOnly setting in VolumeMounts.
-                    +optional
                 type: boolean
             secretName:
                 description: secretName is the  name of secret that contains Azure Storage Account Name and Key
@@ -394,7 +377,6 @@ definitions:
                     fsType to mount. Ex. "ext4", "xfs", "ntfs".
                     If not provided, the empty value is passed to the associated CSI driver
                     which will determine the default filesystem to apply.
-                    +optional
                 type: string
             nodePublishSecretRef:
                 $ref: '#/definitions/LocalObjectReference'
@@ -402,7 +384,6 @@ definitions:
                 description: |-
                     readOnly specifies a read-only configuration for the volume.
                     Defaults to false (read/write).
-                    +optional
                 type: boolean
             volumeAttributes:
                 additionalProperties:
@@ -410,7 +391,6 @@ definitions:
                 description: |-
                     volumeAttributes stores driver-specific properties that are passed to the CSI
                     driver. Consult your driver's documentation for supported values.
-                    +optional
                 type: object
         type: object
     Cache:
@@ -422,18 +402,12 @@ definitions:
     Capabilities:
         properties:
             add:
-                description: |-
-                    Added capabilities
-                    +optional
-                    +listType=atomic
+                description: Added capabilities
                 items:
                     $ref: '#/definitions/Capability'
                 type: array
             drop:
-                description: |-
-                    Removed capabilities
-                    +optional
-                    +listType=atomic
+                description: Removed capabilities
                 items:
                     $ref: '#/definitions/Capability'
                 type: array
@@ -451,27 +425,22 @@ definitions:
                 description: |-
                     monitors is Required: Monitors is a collection of Ceph monitors
                     More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
-                    +listType=atomic
                 items:
                     type: string
                 type: array
             path:
-                description: |-
-                    path is Optional: Used as the mounted root, rather than the full Ceph tree, default is /
-                    +optional
+                description: 'path is Optional: Used as the mounted root, rather than the full Ceph tree, default is /'
                 type: string
             readOnly:
                 description: |-
                     readOnly is Optional: Defaults to false (read/write). ReadOnly here will force
                     the ReadOnly setting in VolumeMounts.
                     More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
-                    +optional
                 type: boolean
             secretFile:
                 description: |-
                     secretFile is Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret
                     More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
-                    +optional
                 type: string
             secretRef:
                 $ref: '#/definitions/LocalObjectReference'
@@ -479,7 +448,6 @@ definitions:
                 description: |-
                     user is optional: User is the rados user name, default is admin
                     More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
-                    +optional
                 type: string
         type: object
     CinderVolumeSource:
@@ -494,14 +462,12 @@ definitions:
                     Must be a filesystem type supported by the host operating system.
                     Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
                     More info: https://examples.k8s.io/mysql-cinder-pd/README.md
-                    +optional
                 type: string
             readOnly:
                 description: |-
                     readOnly defaults to false (read/write). ReadOnly here will force
                     the ReadOnly setting in VolumeMounts.
                     More info: https://examples.k8s.io/mysql-cinder-pd/README.md
-                    +optional
                 type: boolean
             secretRef:
                 $ref: '#/definitions/LocalObjectReference'
@@ -532,7 +498,6 @@ definitions:
                 description: |-
                     Select a single ClusterTrustBundle by object name.  Mutually-exclusive
                     with signerName and labelSelector.
-                    +optional
                 type: string
             optional:
                 description: |-
@@ -541,7 +506,6 @@ definitions:
                     allowed not to exist.  If using signerName, then the combination of
                     signerName and labelSelector is allowed to match zero
                     ClusterTrustBundles.
-                    +optional
                 type: boolean
             path:
                 description: Relative path from the volume root to write the bundle.
@@ -551,7 +515,6 @@ definitions:
                     Select all ClusterTrustBundles that match this signer name.
                     Mutually-exclusive with name.  The contents of all selected
                     ClusterTrustBundles will be unified and deduplicated.
-                    +optional
                 type: string
         type: object
     ConfigMapEnvSource:
@@ -566,22 +529,16 @@ definitions:
                     allowed to be empty. Instances of this type with an empty value here are
                     almost certainly wrong.
                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    +optional
-                    +default=""
-                    +kubebuilder:default=""
                     TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
                 type: string
             optional:
-                description: |-
-                    Specify whether the ConfigMap must be defined
-                    +optional
+                description: Specify whether the ConfigMap must be defined
                 type: boolean
         title: |-
             ConfigMapEnvSource selects a ConfigMap to populate the environment
             variables with.
         type: object
     ConfigMapKeySelector:
-        description: +structType=atomic
         properties:
             key:
                 description: The key to select.
@@ -593,15 +550,10 @@ definitions:
                     allowed to be empty. Instances of this type with an empty value here are
                     almost certainly wrong.
                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    +optional
-                    +default=""
-                    +kubebuilder:default=""
                     TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
                 type: string
             optional:
-                description: |-
-                    Specify whether the ConfigMap or its key must be defined
-                    +optional
+                description: Specify whether the ConfigMap or its key must be defined
                 type: boolean
         title: Selects a key from a ConfigMap.
         type: object
@@ -622,8 +574,6 @@ definitions:
                     present. If a key is specified which is not present in the ConfigMap,
                     the volume setup will error unless it is marked optional. Paths must be
                     relative and may not contain the '..' path or start with '..'.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/KeyToPath'
                 type: array
@@ -634,15 +584,10 @@ definitions:
                     allowed to be empty. Instances of this type with an empty value here are
                     almost certainly wrong.
                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    +optional
-                    +default=""
-                    +kubebuilder:default=""
                     TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
                 type: string
             optional:
-                description: |-
-                    optional specify whether the ConfigMap or its keys must be defined
-                    +optional
+                description: optional specify whether the ConfigMap or its keys must be defined
                 type: boolean
         title: Adapts a ConfigMap into a projected volume.
         type: object
@@ -662,7 +607,6 @@ definitions:
                     Directories within the path are not affected by this setting.
                     This might be in conflict with other options that affect the file
                     mode, like fsGroup, and the result can be other mode bits set.
-                    +optional
                 format: int32
                 type: integer
             items:
@@ -674,8 +618,6 @@ definitions:
                     present. If a key is specified which is not present in the ConfigMap,
                     the volume setup will error unless it is marked optional. Paths must be
                     relative and may not contain the '..' path or start with '..'.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/KeyToPath'
                 type: array
@@ -686,15 +628,10 @@ definitions:
                     allowed to be empty. Instances of this type with an empty value here are
                     almost certainly wrong.
                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    +optional
-                    +default=""
-                    +kubebuilder:default=""
                     TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
                 type: string
             optional:
-                description: |-
-                    optional specify whether the ConfigMap or its keys must be defined
-                    +optional
+                description: optional specify whether the ConfigMap or its keys must be defined
                 type: boolean
         title: Adapts a ConfigMap into a volume.
         type: object
@@ -710,8 +647,6 @@ definitions:
                     produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless
                     of whether the variable exists or not. Cannot be updated.
                     More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -725,8 +660,6 @@ definitions:
                     produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless
                     of whether the variable exists or not. Cannot be updated.
                     More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -734,11 +667,6 @@ definitions:
                 description: |-
                     List of environment variables to set in the container.
                     Cannot be updated.
-                    +optional
-                    +patchMergeKey=name
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=name
                 items:
                     $ref: '#/definitions/EnvVar'
                 type: array
@@ -750,8 +678,6 @@ definitions:
                     sources, the value associated with the last source will take precedence.
                     Values defined by an Env with a duplicate key will take precedence.
                     Cannot be updated.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/EnvFromSource'
                 type: array
@@ -761,7 +687,6 @@ definitions:
                     More info: https://kubernetes.io/docs/concepts/containers/images
                     This field is optional to allow higher level config management to default or override
                     container images in workload controllers like Deployments and StatefulSets.
-                    +optional
                 type: string
             imagePullPolicy:
                 $ref: '#/definitions/PullPolicy'
@@ -784,23 +709,13 @@ definitions:
                     Modifying this array with strategic merge patch may corrupt the data.
                     For more information See https://github.com/kubernetes/kubernetes/issues/108255.
                     Cannot be updated.
-                    +optional
-                    +patchMergeKey=containerPort
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=containerPort
-                    +listMapKey=protocol
                 items:
                     $ref: '#/definitions/ContainerPort'
                 type: array
             readinessProbe:
                 $ref: '#/definitions/Probe'
             resizePolicy:
-                description: |-
-                    Resources resize policy for the container.
-                    +featureGate=InPlacePodVerticalScaling
-                    +optional
-                    +listType=atomic
+                description: Resources resize policy for the container.
                 items:
                     $ref: '#/definitions/ContainerResizePolicy'
                 type: array
@@ -817,7 +732,6 @@ definitions:
                     Whether this container should allocate a buffer for stdin in the container runtime. If this
                     is not set, reads from stdin in the container will always result in EOF.
                     Default is false.
-                    +optional
                 type: boolean
             stdinOnce:
                 description: |-
@@ -828,7 +742,6 @@ definitions:
                     at which time stdin is closed and remains closed until the container is restarted. If this
                     flag is false, a container processes that reads from stdin will never receive an EOF.
                     Default is false
-                    +optional
                 type: boolean
             terminationMessagePath:
                 description: |-
@@ -839,7 +752,6 @@ definitions:
                     all containers will be limited to 12kb.
                     Defaults to /dev/termination-log.
                     Cannot be updated.
-                    +optional
                 type: string
             terminationMessagePolicy:
                 $ref: '#/definitions/TerminationMessagePolicy'
@@ -847,16 +759,9 @@ definitions:
                 description: |-
                     Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.
                     Default is false.
-                    +optional
                 type: boolean
             volumeDevices:
-                description: |-
-                    volumeDevices is the list of block devices to be used by the container.
-                    +patchMergeKey=devicePath
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=devicePath
-                    +optional
+                description: volumeDevices is the list of block devices to be used by the container.
                 items:
                     $ref: '#/definitions/VolumeDevice'
                 type: array
@@ -864,11 +769,6 @@ definitions:
                 description: |-
                     Pod volumes to mount into the container's filesystem.
                     Cannot be updated.
-                    +optional
-                    +patchMergeKey=mountPath
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=mountPath
                 items:
                     $ref: '#/definitions/VolumeMount'
                 type: array
@@ -878,7 +778,6 @@ definitions:
                     If not specified, the container runtime's default will be used, which
                     might be configured in the container image.
                     Cannot be updated.
-                    +optional
                 type: string
         title: A single application container that you want to run within a pod.
         type: object
@@ -894,8 +793,6 @@ definitions:
                     produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless
                     of whether the variable exists or not. Cannot be updated.
                     More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -909,8 +806,6 @@ definitions:
                     produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless
                     of whether the variable exists or not. Cannot be updated.
                     More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -922,11 +817,6 @@ definitions:
                 description: |-
                     List of environment variables to set in the container.
                     Cannot be updated.
-                    +optional
-                    +patchMergeKey=name
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=name
                 items:
                     $ref: '#/definitions/EnvVar'
                 type: array
@@ -938,8 +828,6 @@ definitions:
                     sources, the value associated with the last source will take precedence.
                     Values defined by an Env with a duplicate key will take precedence.
                     Cannot be updated.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/EnvFromSource'
                 type: array
@@ -949,7 +837,6 @@ definitions:
                     More info: https://kubernetes.io/docs/concepts/containers/images
                     This field is optional to allow higher level config management to default or override
                     container images in workload controllers like Deployments and StatefulSets.
-                    +optional
                 type: string
             imagePullPolicy:
                 $ref: '#/definitions/PullPolicy'
@@ -972,23 +859,13 @@ definitions:
                     Modifying this array with strategic merge patch may corrupt the data.
                     For more information See https://github.com/kubernetes/kubernetes/issues/108255.
                     Cannot be updated.
-                    +optional
-                    +patchMergeKey=containerPort
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=containerPort
-                    +listMapKey=protocol
                 items:
                     $ref: '#/definitions/ContainerPort'
                 type: array
             readinessProbe:
                 $ref: '#/definitions/Probe'
             resizePolicy:
-                description: |-
-                    Resources resize policy for the container.
-                    +featureGate=InPlacePodVerticalScaling
-                    +optional
-                    +listType=atomic
+                description: Resources resize policy for the container.
                 items:
                     $ref: '#/definitions/ContainerResizePolicy'
                 type: array
@@ -1005,7 +882,6 @@ definitions:
                     Whether this container should allocate a buffer for stdin in the container runtime. If this
                     is not set, reads from stdin in the container will always result in EOF.
                     Default is false.
-                    +optional
                 type: boolean
             stdinOnce:
                 description: |-
@@ -1016,7 +892,6 @@ definitions:
                     at which time stdin is closed and remains closed until the container is restarted. If this
                     flag is false, a container processes that reads from stdin will never receive an EOF.
                     Default is false
-                    +optional
                 type: boolean
             terminationMessagePath:
                 description: |-
@@ -1027,7 +902,6 @@ definitions:
                     all containers will be limited to 12kb.
                     Defaults to /dev/termination-log.
                     Cannot be updated.
-                    +optional
                 type: string
             terminationMessagePolicy:
                 $ref: '#/definitions/TerminationMessagePolicy'
@@ -1035,16 +909,9 @@ definitions:
                 description: |-
                     Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.
                     Default is false.
-                    +optional
                 type: boolean
             volumeDevices:
-                description: |-
-                    volumeDevices is the list of block devices to be used by the container.
-                    +patchMergeKey=devicePath
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=devicePath
-                    +optional
+                description: volumeDevices is the list of block devices to be used by the container.
                 items:
                     $ref: '#/definitions/VolumeDevice'
                 type: array
@@ -1052,11 +919,6 @@ definitions:
                 description: |-
                     Pod volumes to mount into the container's filesystem.
                     Cannot be updated.
-                    +optional
-                    +patchMergeKey=mountPath
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=mountPath
                 items:
                     $ref: '#/definitions/VolumeMount'
                 type: array
@@ -1066,7 +928,6 @@ definitions:
                     If not specified, the container runtime's default will be used, which
                     might be configured in the container image.
                     Cannot be updated.
-                    +optional
                 type: string
         type: object
     ContainerPort:
@@ -1078,9 +939,7 @@ definitions:
                 format: int32
                 type: integer
             hostIP:
-                description: |-
-                    What host IP to bind the external port to.
-                    +optional
+                description: What host IP to bind the external port to.
                 type: string
             hostPort:
                 description: |-
@@ -1088,7 +947,6 @@ definitions:
                     If specified, this must be a valid port number, 0 < x < 65536.
                     If HostNetwork is specified, this must match ContainerPort.
                     Most containers do not need this.
-                    +optional
                 format: int32
                 type: integer
             name:
@@ -1096,7 +954,6 @@ definitions:
                     If specified, this must be an IANA_SVC_NAME and unique within the pod. Each
                     named port in a pod must have a unique name. Name for the port that can be
                     referred to by services.
-                    +optional
                 type: string
             protocol:
                 $ref: '#/definitions/Protocol'
@@ -1142,10 +999,8 @@ definitions:
         description: It can be specified if the workflow should continue when the pod errors, fails or both.
         properties:
             error:
-                description: +optional
                 type: boolean
             failed:
-                description: +optional
                 type: boolean
         title: ContinueOn defines if a workflow should continue even if a task or step fails/errors.
         type: object
@@ -1229,10 +1084,7 @@ definitions:
                 description: Target are one or more names of targets to execute in a DAG
                 type: string
             tasks:
-                description: |-
-                    Tasks are a list of DAG tasks
-                    +patchStrategy=merge
-                    +patchMergeKey=name
+                description: Tasks are a list of DAG tasks
                 items:
                     $ref: '#/definitions/DAGTask'
                 type: array
@@ -1257,10 +1109,7 @@ definitions:
             mode.
         properties:
             items:
-                description: |-
-                    Items is a list of DownwardAPIVolume file
-                    +optional
-                    +listType=atomic
+                description: Items is a list of DownwardAPIVolume file
                 items:
                     $ref: '#/definitions/DownwardAPIVolumeFile'
                 type: array
@@ -1279,11 +1128,9 @@ definitions:
                     If not specified, the volume defaultMode will be used.
                     This might be in conflict with other options that affect the file
                     mode, like fsGroup, and the result can be other mode bits set.
-                    +optional
                 format: int32
                 type: integer
             path:
-                description: 'Required: Path is  the relative path name of the file to be created. Must not be absolute or contain the ''..'' path. Must be utf-8 encoded. The first item of the relative path must not start with ''..'''
                 type: string
             resourceFieldRef:
                 $ref: '#/definitions/ResourceFieldSelector'
@@ -1301,14 +1148,10 @@ definitions:
                     Directories within the path are not affected by this setting.
                     This might be in conflict with other options that affect the file
                     mode, like fsGroup, and the result can be other mode bits set.
-                    +optional
                 format: int32
                 type: integer
             items:
-                description: |-
-                    Items is a list of downward API volume file
-                    +optional
-                    +listType=atomic
+                description: Items is a list of downward API volume file
                 items:
                     $ref: '#/definitions/DownwardAPIVolumeFile'
                 type: array
@@ -1335,9 +1178,7 @@ definitions:
             configMapRef:
                 $ref: '#/definitions/ConfigMapEnvSource'
             prefix:
-                description: |-
-                    An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
-                    +optional
+                description: An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
                 type: string
             secretRef:
                 $ref: '#/definitions/SecretEnvSource'
@@ -1358,7 +1199,6 @@ definitions:
                     Escaped references will never be expanded, regardless of whether the variable
                     exists or not.
                     Defaults to "".
-                    +optional
                 type: string
             valueFrom:
                 $ref: '#/definitions/EnvVarSource'
@@ -1391,8 +1231,6 @@ definitions:
                     not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use
                     a shell, you need to explicitly call out to that shell.
                     Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -1422,6 +1260,15 @@ definitions:
                 type: string
         title: ExecutorConfig holds configurations of an executor container.
         type: object
+    ExecutorObjectMeta:
+        properties:
+            name:
+                type: string
+            namespace:
+                type: string
+            uid:
+                type: string
+        type: object
     FCVolumeSource:
         description: |-
             Fibre Channel volumes can only be mounted as read/write once.
@@ -1433,25 +1280,18 @@ definitions:
                     Must be a filesystem type supported by the host operating system.
                     Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
                     TODO: how do we prevent errors in the filesystem from compromising the machine
-                    +optional
                 type: string
             lun:
-                description: |-
-                    lun is Optional: FC target lun number
-                    +optional
+                description: 'lun is Optional: FC target lun number'
                 format: int32
                 type: integer
             readOnly:
                 description: |-
                     readOnly is Optional: Defaults to false (read/write). ReadOnly here will force
                     the ReadOnly setting in VolumeMounts.
-                    +optional
                 type: boolean
             targetWWNs:
-                description: |-
-                    targetWWNs is Optional: FC target worldwide names (WWNs)
-                    +optional
-                    +listType=atomic
+                description: 'targetWWNs is Optional: FC target worldwide names (WWNs)'
                 items:
                     type: string
                 type: array
@@ -1459,8 +1299,6 @@ definitions:
                 description: |-
                     wwids Optional: FC volume world wide identifiers (wwids)
                     Either wwids or combination of targetWWNs and lun must be set, but not both simultaneously.
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -1477,7 +1315,6 @@ definitions:
             If a key maps to an empty Fields value, the field that key represents is part of the set.
 
             The exact format is defined in sigs.k8s.io/structured-merge-diff
-            +protobuf.options.(gogoproto.goproto_stringer)=false
         title: FieldsV1 stores a set of fields in a data structure like a Trie, in JSON format.
         type: object
     FlexVolumeSource:
@@ -1493,20 +1330,16 @@ definitions:
                     fsType is the filesystem type to mount.
                     Must be a filesystem type supported by the host operating system.
                     Ex. "ext4", "xfs", "ntfs". The default filesystem depends on FlexVolume script.
-                    +optional
                 type: string
             options:
                 additionalProperties:
                     type: string
-                description: |-
-                    options is Optional: this field holds extra command options if any.
-                    +optional
+                description: 'options is Optional: this field holds extra command options if any.'
                 type: object
             readOnly:
                 description: |-
                     readOnly is Optional: defaults to false (read/write). ReadOnly here will force
                     the ReadOnly setting in VolumeMounts.
-                    +optional
                 type: boolean
             secretRef:
                 $ref: '#/definitions/LocalObjectReference'
@@ -1520,12 +1353,9 @@ definitions:
                 description: |-
                     datasetName is Name of the dataset stored as metadata -> name on the dataset for Flocker
                     should be considered as deprecated
-                    +optional
                 type: string
             datasetUUID:
-                description: |-
-                    datasetUUID is the UUID of the dataset. This is unique identifier of a Flocker dataset
-                    +optional
+                description: datasetUUID is the UUID of the dataset. This is unique identifier of a Flocker dataset
                 type: string
         title: Represents a Flocker volume mounted by the Flocker agent.
         type: object
@@ -1543,7 +1373,6 @@ definitions:
                     Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
                     TODO: how do we prevent errors in the filesystem from compromising the machine
-                    +optional
                 type: string
             partition:
                 description: |-
@@ -1552,7 +1381,6 @@ definitions:
                     Examples: For volume /dev/sda1, you specify the partition as "1".
                     Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty).
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
-                    +optional
                 format: int32
                 type: integer
             pdName:
@@ -1565,7 +1393,6 @@ definitions:
                     readOnly here will force the ReadOnly setting in VolumeMounts.
                     Defaults to false.
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
-                    +optional
                 type: boolean
         title: Represents a Persistent Disk resource in Google Compute Engine.
         type: object
@@ -1593,8 +1420,6 @@ definitions:
                     (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
 
                     If this is not specified, the default behavior is defined by gRPC.
-                    +optional
-                    +default=""
                 type: string
         title: GRPCAction specifies an action involving a GRPC service.
         type: object
@@ -1669,15 +1494,12 @@ definitions:
                     Must not contain or start with '..'.  If '.' is supplied, the volume directory will be the
                     git repository.  Otherwise, if specified, the volume will contain the git repository in
                     the subdirectory with the given name.
-                    +optional
                 type: string
             repository:
                 description: repository is the URL
                 type: string
             revision:
-                description: |-
-                    revision is the commit hash for the specified revision.
-                    +optional
+                description: revision is the commit hash for the specified revision.
                 type: string
         title: |-
             Represents a volume that is populated with the contents of a git repository.
@@ -1702,7 +1524,6 @@ definitions:
                     readOnly here will force the Glusterfs volume to be mounted with read-only permissions.
                     Defaults to false.
                     More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
-                    +optional
                 type: boolean
         title: Represents a Glusterfs mount that lasts the lifetime of a pod.
         type: object
@@ -1816,35 +1637,20 @@ definitions:
                 description: |-
                     Host name to connect to, defaults to the pod IP. You probably want to set
                     "Host" in httpHeaders instead.
-                    +optional
                 type: string
             httpHeaders:
-                description: |-
-                    Custom headers to set in the request. HTTP allows repeated headers.
-                    +optional
-                    +listType=atomic
+                description: Custom headers to set in the request. HTTP allows repeated headers.
                 items:
-                    $ref: '#/definitions/HTTPHeader'
+                    $ref: '#/definitions/V1HTTPHeader'
                 type: array
             path:
-                description: |-
-                    Path to access on the HTTP server.
-                    +optional
+                description: Path to access on the HTTP server.
                 type: string
             port:
                 $ref: '#/definitions/IntOrString'
             scheme:
                 $ref: '#/definitions/URIScheme'
         title: HTTPGetAction describes an action based on HTTP Get requests.
-        type: object
-    HTTPHeader:
-        properties:
-            name:
-                type: string
-            value:
-                type: string
-            valueFrom:
-                $ref: '#/definitions/HTTPHeaderSource'
         type: object
     HTTPHeaderSource:
         properties:
@@ -1853,7 +1659,7 @@ definitions:
         type: object
     HTTPHeaders:
         items:
-            $ref: '#/definitions/HTTPHeader'
+            $ref: '#/definitions/V1alpha1HTTPHeader'
         type: array
     Header:
         description: Header indicate a key-value request header to be used when fetching artifacts over HTTP
@@ -1883,20 +1689,15 @@ definitions:
             pod's hosts file.
         properties:
             hostnames:
-                description: |-
-                    Hostnames for the above IP address.
-                    +listType=atomic
+                description: Hostnames for the above IP address.
                 items:
                     type: string
                 type: array
             ip:
-                description: |-
-                    IP address of the host file entry.
-                    +required
+                description: IP address of the host file entry.
                 type: string
         type: object
     HostPathType:
-        description: +enum
         type: string
     HostPathVolumeSource:
         description: Host path volumes do not support ownership management or SELinux relabeling.
@@ -1917,14 +1718,10 @@ definitions:
             ISCSI volumes support ownership management and SELinux relabeling.
         properties:
             chapAuthDiscovery:
-                description: |-
-                    chapAuthDiscovery defines whether support iSCSI Discovery CHAP authentication
-                    +optional
+                description: chapAuthDiscovery defines whether support iSCSI Discovery CHAP authentication
                 type: boolean
             chapAuthSession:
-                description: |-
-                    chapAuthSession defines whether support iSCSI Session CHAP authentication
-                    +optional
+                description: chapAuthSession defines whether support iSCSI Session CHAP authentication
                 type: boolean
             fsType:
                 description: |-
@@ -1933,14 +1730,12 @@ definitions:
                     Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#iscsi
                     TODO: how do we prevent errors in the filesystem from compromising the machine
-                    +optional
                 type: string
             initiatorName:
                 description: |-
                     initiatorName is the custom iSCSI Initiator Name.
                     If initiatorName is specified with iscsiInterface simultaneously, new iSCSI interface
                     <target portal>:<volume name> will be created for the connection.
-                    +optional
                 type: string
             iqn:
                 description: iqn is the target iSCSI Qualified Name.
@@ -1949,8 +1744,6 @@ definitions:
                 description: |-
                     iscsiInterface is the interface Name that uses an iSCSI transport.
                     Defaults to 'default' (tcp).
-                    +optional
-                    +default="default"
                 type: string
             lun:
                 description: lun represents iSCSI Target Lun number.
@@ -1960,8 +1753,6 @@ definitions:
                 description: |-
                     portals is the iSCSI Target Portal List. The portal is either an IP or ip_addr:port if the port
                     is other than default (typically TCP ports 860 and 3260).
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -1969,7 +1760,6 @@ definitions:
                 description: |-
                     readOnly here will force the ReadOnly setting in VolumeMounts.
                     Defaults to false.
-                    +optional
                 type: boolean
             secretRef:
                 $ref: '#/definitions/LocalObjectReference'
@@ -1986,13 +1776,11 @@ definitions:
                 $ref: '#/definitions/PullPolicy'
             reference:
                 description: |-
-                    Required: Image or artifact reference to be used.
                     Behaves in the same way as pod.spec.containers[*].image.
                     Pull secrets will be assembled in the same way as for the container image by looking up node credentials, SA image pull secrets, and pod spec image pull secrets.
                     More info: https://kubernetes.io/docs/concepts/containers/images
                     This field is optional to allow higher level config management to default or override
                     container images in workload controllers like Deployments and StatefulSets.
-                    +optional
                 type: string
         title: ImageVolumeSource represents a image volume resource.
         type: object
@@ -2002,19 +1790,18 @@ definitions:
             artifacts:
                 $ref: '#/definitions/Artifacts'
             parameters:
-                description: |-
-                    Parameters are a list of parameters passed as inputs
-                    +patchStrategy=merge
-                    +patchMergeKey=name
+                description: Parameters are a list of parameters passed as inputs
                 items:
                     $ref: '#/definitions/Parameter'
                 type: array
         type: object
     IntOrString:
         description: |-
-            +protobuf=true
-            +protobuf.options.(gogoproto.goproto_stringer)=false
-            +k8s:openapi-gen=true
+            IntOrString is a type that can hold an int32 or a string.  When used in
+            JSON or YAML marshalling and unmarshalling, it produces or consumes the
+            inner type.  This allows you to have, for example, a JSON field that can
+            accept a name or number.
+            TODO: Rename to Int32OrString
         properties:
             IntVal:
                 format: int32
@@ -2023,18 +1810,9 @@ definitions:
                 type: string
             Type:
                 $ref: '#/definitions/Type'
-        title: |-
-            IntOrString is a type that can hold an int32 or a string.  When used in
-            JSON or YAML marshalling and unmarshalling, it produces or consumes the
-            inner type.  This allows you to have, for example, a JSON field that can
-            accept a name or number.
-            TODO: Rename to Int32OrString
         type: object
     Item:
         description: |-
-            +protobuf.options.(gogoproto.goproto_stringer)=false
-            +kubebuilder:validation:Type=object
-        title: |-
             Item expands a single workflow step into multiple parallel steps
             The value of Item can be a map, string, bool, or number
         type: object
@@ -2051,7 +1829,6 @@ definitions:
                     If not specified, the volume defaultMode will be used.
                     This might be in conflict with other options that affect the file
                     mode, like fsGroup, and the result can be other mode bits set.
-                    +optional
                 format: int32
                 type: integer
             path:
@@ -2068,13 +1845,9 @@ definitions:
             A label selector is a label query over a set of resources. The result of matchLabels and
             matchExpressions are ANDed. An empty label selector matches all objects. A null
             label selector matches no objects.
-            +structType=atomic
         properties:
             matchExpressions:
-                description: |-
-                    matchExpressions is a list of label selector requirements. The requirements are ANDed.
-                    +optional
-                    +listType=atomic
+                description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
                 items:
                     $ref: '#/definitions/LabelSelectorRequirement'
                 type: array
@@ -2085,7 +1858,6 @@ definitions:
                     matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
                     map is equivalent to an element of matchExpressions, whose key field is "key", the
                     operator is "In", and the values array contains only "value". The requirements are ANDed.
-                    +optional
                 type: object
         type: object
     LabelSelectorOperator:
@@ -2107,8 +1879,6 @@ definitions:
                     the values array must be non-empty. If the operator is Exists or DoesNotExist,
                     the values array must be empty. This array is replaced during a strategic
                     merge patch.
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -2159,17 +1929,8 @@ definitions:
         type: object
     LocalObjectReference:
         description: |-
-            New uses of this type are discouraged because of difficulty describing its usage when embedded in APIs.
-            1. Invalid usage help.  It is impossible to add specific help for individual usage.  In most embedded usages, there are particular
-            restrictions like, "must refer only to types A and B" or "UID not honored" or "name must be restricted".
-            Those cannot be well described when embedded.
-            2. Inconsistent validation.  Because the usages are different, the validation rules are different by usage, which makes it hard for users to predict what will happen.
-            3. We cannot easily change it.  Because this type is embedded in many locations, updates to this type
-            will affect numerous schemas.  Don't make new APIs embed an underspecified API type they do not control.
-
-            Instead of using this type, create a locally provided and used type that is well-focused on your reference.
-            For example, ServiceReferences for admission registration: https://github.com/kubernetes/api/blob/release-1.17/admissionregistration/v1/types.go#L533 .
-            +structType=atomic
+            LocalObjectReference contains enough information to let you locate the
+            referenced object inside the same namespace.
         properties:
             name:
                 description: |-
@@ -2178,14 +1939,8 @@ definitions:
                     allowed to be empty. Instances of this type with an empty value here are
                     almost certainly wrong.
                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    +optional
-                    +default=""
-                    +kubebuilder:default=""
                     TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
                 type: string
-        title: |-
-            LocalObjectReference contains enough information to let you locate the
-            referenced object inside the same namespace.
         type: object
     ManagedFieldsEntry:
         description: |-
@@ -2228,7 +1983,6 @@ definitions:
                     changes any of the owned fields value or removes a field. The
                     timestamp does not update when a field is removed from the entry
                     because another manager took it over.
-                    +optional
                 type: string
         type: object
     ManagedFieldsOperationType:
@@ -2283,7 +2037,6 @@ definitions:
                 type: array
         type: object
     MountPropagationMode:
-        description: +enum
         title: MountPropagationMode describes mount propagation.
         type: string
     Mutex:
@@ -2293,7 +2046,7 @@ definitions:
                 description: name of the mutex
                 type: string
             namespace:
-                default: '[namespace of workflow]'
+                description: 'Namespace is the namespace of the mutex, default: [namespace of workflow]'
                 type: string
         type: object
     NFSVolumeSource:
@@ -2309,7 +2062,6 @@ definitions:
                     readOnly here will force the NFS export to be mounted with read-only permissions.
                     Defaults to false.
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
-                    +optional
                 type: boolean
             server:
                 description: |-
@@ -2331,8 +2083,6 @@ definitions:
                     compute a sum by iterating through the elements of this field and adding
                     "weight" to the sum if the node matches the corresponding matchExpressions; the
                     node(s) with the highest sum are the most preferred.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/PreferredSchedulingTerm'
                 type: array
@@ -2359,12 +2109,9 @@ definitions:
             A node selector represents the union of the results of one or more label queries
             over a set of nodes; that is, it represents the OR of the selectors represented
             by the node selector terms.
-            +structType=atomic
         properties:
             nodeSelectorTerms:
-                description: |-
-                    Required. A list of node selector terms. The terms are ORed.
-                    +listType=atomic
+                description: Required. A list of node selector terms. The terms are ORed.
                 items:
                     $ref: '#/definitions/NodeSelectorTerm'
                 type: array
@@ -2373,7 +2120,6 @@ definitions:
         description: |-
             A node selector operator is the set of operators that can be used in
             a node selector requirement.
-            +enum
         type: string
     NodeSelectorRequirement:
         description: |-
@@ -2392,8 +2138,6 @@ definitions:
                     the values array must be empty. If the operator is Gt or Lt, the values
                     array must have a single element, which will be interpreted as an integer.
                     This array is replaced during a strategic merge patch.
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -2403,21 +2147,14 @@ definitions:
             A null or empty node selector term matches no objects. The requirements of
             them are ANDed.
             The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
-            +structType=atomic
         properties:
             matchExpressions:
-                description: |-
-                    A list of node selector requirements by node's labels.
-                    +optional
-                    +listType=atomic
+                description: A list of node selector requirements by node's labels.
                 items:
                     $ref: '#/definitions/NodeSelectorRequirement'
                 type: array
             matchFields:
-                description: |-
-                    A list of node selector requirements by node's fields.
-                    +optional
-                    +listType=atomic
+                description: A list of node selector requirements by node's fields.
                 items:
                     $ref: '#/definitions/NodeSelectorRequirement'
                 type: array
@@ -2497,26 +2234,14 @@ definitions:
                 type: integer
         type: object
     ObjectFieldSelector:
-        description: +structType=atomic
         properties:
             apiVersion:
-                description: |-
-                    Version of the schema the FieldPath is written in terms of, defaults to "v1".
-                    +optional
+                description: Version of the schema the FieldPath is written in terms of, defaults to "v1".
                 type: string
             fieldPath:
                 description: Path of the field to select in the specified API version.
                 type: string
         title: ObjectFieldSelector selects an APIVersioned field of an object.
-        type: object
-    ObjectMeta:
-        properties:
-            name:
-                type: string
-            namespace:
-                type: string
-            uid:
-                type: string
         type: object
     Outputs:
         description: Outputs hold parameters, artifacts, and results from a step
@@ -2527,10 +2252,7 @@ definitions:
                 description: ExitCode holds the exit code of a script template
                 type: string
             parameters:
-                description: |-
-                    Parameters holds the list of output parameters produced by a step
-                    +patchStrategy=merge
-                    +patchMergeKey=name
+                description: Parameters holds the list of output parameters produced by a step
                 items:
                     $ref: '#/definitions/Parameter'
                 type: array
@@ -2543,7 +2265,6 @@ definitions:
             OwnerReference contains enough information to let you identify an owning
             object. An owning object must be in the same namespace as the dependent, or
             be cluster-scoped, so there is no namespace field.
-            +structType=atomic
         properties:
             apiVersion:
                 description: API version of the referent.
@@ -2558,12 +2279,9 @@ definitions:
                     Defaults to false.
                     To set this field, a user needs "delete" permission of the owner,
                     otherwise 422 (Unprocessable Entity) will be returned.
-                    +optional
                 type: boolean
             controller:
-                description: |-
-                    If true, this reference points to the managing controller.
-                    +optional
+                description: If true, this reference points to the managing controller.
                 type: boolean
             kind:
                 description: |-
@@ -2579,7 +2297,6 @@ definitions:
                 $ref: '#/definitions/UID'
         type: object
     ParallelSteps:
-        description: +kubebuilder:validation:Type=array
         type: object
     Parameter:
         description: Parameter indicate a passed string parameter to a service template with an optional default value
@@ -2607,7 +2324,6 @@ definitions:
                 $ref: '#/definitions/ValueFrom'
         type: object
     PersistentVolumeAccessMode:
-        description: +enum
         type: string
     PersistentVolumeClaimSpec:
         description: |-
@@ -2618,8 +2334,6 @@ definitions:
                 description: |-
                     accessModes contains the desired access modes the volume should have.
                     More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/PersistentVolumeAccessMode'
                 type: array
@@ -2635,7 +2349,6 @@ definitions:
                 description: |-
                     storageClassName is the name of the StorageClass required by the claim.
                     More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1
-                    +optional
                 type: string
             volumeAttributesClassName:
                 description: |-
@@ -2651,15 +2364,11 @@ definitions:
                     exists.
                     More info: https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/
                     (Beta) Using this field requires the VolumeAttributesClass feature gate to be enabled (off by default).
-                    +featureGate=VolumeAttributesClass
-                    +optional
                 type: string
             volumeMode:
                 $ref: '#/definitions/PersistentVolumeMode'
             volumeName:
-                description: |-
-                    volumeName is the binding reference to the PersistentVolume backing this claim.
-                    +optional
+                description: volumeName is the binding reference to the PersistentVolume backing this claim.
                 type: string
         type: object
     PersistentVolumeClaimTemplate:
@@ -2667,187 +2376,10 @@ definitions:
             PersistentVolumeClaimTemplate is used to produce
             PersistentVolumeClaim objects as part of an EphemeralVolumeSource.
         properties:
-            annotations:
-                additionalProperties:
-                    type: string
-                description: |-
-                    Annotations is an unstructured key value map stored with a resource that may be
-                    set by external tools to store and retrieve arbitrary metadata. They are not
-                    queryable and should be preserved when modifying objects.
-                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations
-                    +optional
-                type: object
-            creationTimestamp:
-                description: |-
-                    CreationTimestamp is a timestamp representing the server time when this object was
-                    created. It is not guaranteed to be set in happens-before order across separate operations.
-                    Clients may not set this value. It is represented in RFC3339 form and is in UTC.
-
-                    Populated by the system.
-                    Read-only.
-                    Null for lists.
-                    More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-                    +optional
-                type: string
-            deletionGracePeriodSeconds:
-                description: |-
-                    Number of seconds allowed for this object to gracefully terminate before
-                    it will be removed from the system. Only set when deletionTimestamp is also set.
-                    May only be shortened.
-                    Read-only.
-                    +optional
-                format: int64
-                type: integer
-            deletionTimestamp:
-                description: |-
-                    DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted. This
-                    field is set by the server when a graceful deletion is requested by the user, and is not
-                    directly settable by a client. The resource is expected to be deleted (no longer visible
-                    from resource lists, and not reachable by name) after the time in this field, once the
-                    finalizers list is empty. As long as the finalizers list contains items, deletion is blocked.
-                    Once the deletionTimestamp is set, this value may not be unset or be set further into the
-                    future, although it may be shortened or the resource may be deleted prior to this time.
-                    For example, a user may request that a pod is deleted in 30 seconds. The Kubelet will react
-                    by sending a graceful termination signal to the containers in the pod. After that 30 seconds,
-                    the Kubelet will send a hard termination signal (SIGKILL) to the container and after cleanup,
-                    remove the pod from the API. In the presence of network partitions, this object may still
-                    exist after this timestamp, until an administrator or automated process can determine the
-                    resource is fully terminated.
-                    If not set, graceful deletion of the object has not been requested.
-
-                    Populated by the system when a graceful deletion is requested.
-                    Read-only.
-                    More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-                    +optional
-                type: string
-            finalizers:
-                description: |-
-                    Must be empty before the object is deleted from the registry. Each entry
-                    is an identifier for the responsible component that will remove the entry
-                    from the list. If the deletionTimestamp of the object is non-nil, entries
-                    in this list can only be removed.
-                    Finalizers may be processed and removed in any order.  Order is NOT enforced
-                    because it introduces significant risk of stuck finalizers.
-                    finalizers is a shared field, any actor with permission can reorder it.
-                    If the finalizer list is processed in order, then this can lead to a situation
-                    in which the component responsible for the first finalizer in the list is
-                    waiting for a signal (field value, external system, or other) produced by a
-                    component responsible for a finalizer later in the list, resulting in a deadlock.
-                    Without enforced ordering finalizers are free to order amongst themselves and
-                    are not vulnerable to ordering changes in the list.
-                    +optional
-                    +patchStrategy=merge
-                    +listType=set
-                items:
-                    type: string
-                type: array
-            generateName:
-                description: |-
-                    GenerateName is an optional prefix, used by the server, to generate a unique
-                    name ONLY IF the Name field has not been provided.
-                    If this field is used, the name returned to the client will be different
-                    than the name passed. This value will also be combined with a unique suffix.
-                    The provided value has the same validation rules as the Name field,
-                    and may be truncated by the length of the suffix required to make the value
-                    unique on the server.
-
-                    If this field is specified and the generated name exists, the server will return a 409.
-
-                    Applied only if Name is not specified.
-                    More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#idempotency
-                    +optional
-                type: string
-            generation:
-                description: |-
-                    A sequence number representing a specific generation of the desired state.
-                    Populated by the system. Read-only.
-                    +optional
-                format: int64
-                type: integer
-            labels:
-                additionalProperties:
-                    type: string
-                description: |-
-                    Map of string keys and values that can be used to organize and categorize
-                    (scope and select) objects. May match selectors of replication controllers
-                    and services.
-                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels
-                    +optional
-                type: object
-            managedFields:
-                description: |-
-                    ManagedFields maps workflow-id and version to the set of fields
-                    that are managed by that workflow. This is mostly for internal
-                    housekeeping, and users typically shouldn't need to set or
-                    understand this field. A workflow can be the user's name, a
-                    controller's name, or the name of a specific apply path like
-                    "ci-cd". The set of fields is always in the version that the
-                    workflow used when modifying the object.
-
-                    +optional
-                    +listType=atomic
-                items:
-                    $ref: '#/definitions/ManagedFieldsEntry'
-                type: array
-            name:
-                description: |-
-                    Name must be unique within a namespace. Is required when creating resources, although
-                    some resources may allow a client to request the generation of an appropriate name
-                    automatically. Name is primarily intended for creation idempotence and configuration
-                    definition.
-                    Cannot be updated.
-                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names
-                    +optional
-                type: string
-            namespace:
-                description: |-
-                    Namespace defines the space within which each name must be unique. An empty namespace is
-                    equivalent to the "default" namespace, but "default" is the canonical representation.
-                    Not all objects are required to be scoped to a namespace - the value of this field for
-                    those objects will be empty.
-
-                    Must be a DNS_LABEL.
-                    Cannot be updated.
-                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces
-                    +optional
-                type: string
-            ownerReferences:
-                description: |-
-                    List of objects depended by this object. If ALL objects in the list have
-                    been deleted, this object will be garbage collected. If this object is managed by a controller,
-                    then an entry in this list will point to this controller, with the controller field set to true.
-                    There cannot be more than one managing controller.
-                    +optional
-                    +patchMergeKey=uid
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=uid
-                items:
-                    $ref: '#/definitions/OwnerReference'
-                type: array
-            resourceVersion:
-                description: |-
-                    An opaque value that represents the internal version of this object that can
-                    be used by clients to determine when objects have changed. May be used for optimistic
-                    concurrency, change detection, and the watch operation on a resource or set of resources.
-                    Clients must treat these values as opaque and passed unmodified back to the server.
-                    They may only be valid for a particular resource or set of resources.
-
-                    Populated by the system.
-                    Read-only.
-                    Value must be treated as opaque by clients and .
-                    More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
-                    +optional
-                type: string
-            selfLink:
-                description: |-
-                    Deprecated: selfLink is a legacy read-only field that is no longer populated by the system.
-                    +optional
-                type: string
+            metadata:
+                $ref: '#/definitions/V1ObjectMeta'
             spec:
                 $ref: '#/definitions/PersistentVolumeClaimSpec'
-            uid:
-                $ref: '#/definitions/UID'
         type: object
     PersistentVolumeClaimVolumeSource:
         description: |-
@@ -2864,12 +2396,10 @@ definitions:
                 description: |-
                     readOnly Will force the ReadOnly setting in VolumeMounts.
                     Default false.
-                    +optional
                 type: boolean
         title: PersistentVolumeClaimVolumeSource references the user's PVC in the same namespace.
         type: object
     PersistentVolumeMode:
-        description: +enum
         title: PersistentVolumeMode describes how a volume is intended to be consumed, either Block or Filesystem.
         type: string
     PhotonPersistentDiskVolumeSource:
@@ -2901,8 +2431,6 @@ definitions:
                     compute a sum by iterating through the elements of this field and adding
                     "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the
                     node(s) with the highest sum are the most preferred.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/WeightedPodAffinityTerm'
                 type: array
@@ -2915,8 +2443,6 @@ definitions:
                     system may or may not try to eventually evict the pod from its node.
                     When there are multiple elements, the lists of nodes corresponding to each
                     podAffinityTerm are intersected, i.e. all terms must be satisfied.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/PodAffinityTerm'
                 type: array
@@ -2944,9 +2470,6 @@ definitions:
                     The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                     Also, matchLabelKeys cannot be set when labelSelector isn't set.
                     This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
-
-                    +listType=atomic
-                    +optional
                 items:
                     type: string
                 type: array
@@ -2961,9 +2484,6 @@ definitions:
                     The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                     Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
                     This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
-
-                    +listType=atomic
-                    +optional
                 items:
                     type: string
                 type: array
@@ -2975,8 +2495,6 @@ definitions:
                     The term is applied to the union of the namespaces listed in this field
                     and the ones selected by namespaceSelector.
                     null or empty namespaces list and null namespaceSelector means "this pod's namespace".
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -3002,8 +2520,6 @@ definitions:
                     compute a sum by iterating through the elements of this field and adding
                     "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the
                     node(s) with the highest sum are the most preferred.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/WeightedPodAffinityTerm'
                 type: array
@@ -3016,8 +2532,6 @@ definitions:
                     system may or may not try to eventually evict the pod from its node.
                     When there are multiple elements, the lists of nodes corresponding to each
                     podAffinityTerm are intersected, i.e. all terms must be satisfied.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/PodAffinityTerm'
                 type: array
@@ -3027,7 +2541,6 @@ definitions:
         description: |-
             PodFSGroupChangePolicy holds policies that will be used for applying fsGroup to a volume
             when volume is mounted.
-            +enum
         type: string
     PodSELinuxChangePolicy:
         title: PodSELinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.
@@ -3051,7 +2564,6 @@ definitions:
 
                     If unset, the Kubelet will not modify the ownership and permissions of any volume.
                     Note that this field cannot be set when spec.os.name is windows.
-                    +optional
                 format: int64
                 type: integer
             fsGroupChangePolicy:
@@ -3064,7 +2576,6 @@ definitions:
                     PodSecurityContext, the value specified in SecurityContext takes precedence
                     for that container.
                     Note that this field cannot be set when spec.os.name is windows.
-                    +optional
                 format: int64
                 type: integer
             runAsNonRoot:
@@ -3075,7 +2586,6 @@ definitions:
                     If unset or false, no such validation will be performed.
                     May also be set in SecurityContext.  If set in both SecurityContext and
                     PodSecurityContext, the value specified in SecurityContext takes precedence.
-                    +optional
                 type: boolean
             runAsUser:
                 description: |-
@@ -3085,7 +2595,6 @@ definitions:
                     PodSecurityContext, the value specified in SecurityContext takes precedence
                     for that container.
                     Note that this field cannot be set when spec.os.name is windows.
-                    +optional
                 format: int64
                 type: integer
             seLinuxChangePolicy:
@@ -3105,8 +2614,6 @@ definitions:
                     defined in the container image may still be used, depending on the
                     supplementalGroupsPolicy field.
                     Note that this field cannot be set when spec.os.name is windows.
-                    +optional
-                    +listType=atomic
                 items:
                     format: int64
                     type: integer
@@ -3118,8 +2625,6 @@ definitions:
                     Sysctls hold a list of namespaced sysctls used for the pod. Pods with unsupported
                     sysctls (by the container runtime) might fail to launch.
                     Note that this field cannot be set when spec.os.name is windows.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/Sysctl'
                 type: array
@@ -3139,7 +2644,6 @@ definitions:
                 description: |-
                     readOnly defaults to false (read/write). ReadOnly here will force
                     the ReadOnly setting in VolumeMounts.
-                    +optional
                 type: boolean
             volumeID:
                 description: volumeID uniquely identifies a Portworx volume
@@ -3169,7 +2673,6 @@ definitions:
                 description: |-
                     Minimum consecutive failures for the probe to be considered failed after having succeeded.
                     Defaults to 3. Minimum value is 1.
-                    +optional
                 format: int32
                 type: integer
             grpc:
@@ -3180,21 +2683,18 @@ definitions:
                 description: |-
                     Number of seconds after the container has started before liveness probes are initiated.
                     More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
-                    +optional
                 format: int32
                 type: integer
             periodSeconds:
                 description: |-
                     How often (in seconds) to perform the probe.
                     Default to 10 seconds. Minimum value is 1.
-                    +optional
                 format: int32
                 type: integer
             successThreshold:
                 description: |-
                     Minimum consecutive successes for the probe to be considered successful after having failed.
                     Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
-                    +optional
                 format: int32
                 type: integer
             tcpSocket:
@@ -3211,7 +2711,6 @@ definitions:
                     the kill signal (no opportunity to shut down).
                     This is a beta field and requires enabling ProbeTerminationGracePeriod feature gate.
                     Minimum value is 1. spec.terminationGracePeriodSeconds is used if unset.
-                    +optional
                 format: int64
                 type: integer
             timeoutSeconds:
@@ -3219,12 +2718,10 @@ definitions:
                     Number of seconds after which the probe times out.
                     Defaults to 1 second. Minimum value is 1.
                     More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
-                    +optional
                 format: int32
                 type: integer
         type: object
     ProcMountType:
-        description: +enum
         type: string
     Progress:
         title: Progress in N/M format. N is number of task complete. M is number of tasks.
@@ -3240,15 +2737,12 @@ definitions:
                     Directories within the path are not affected by this setting.
                     This might be in conflict with other options that affect the file
                     mode, like fsGroup, and the result can be other mode bits set.
-                    +optional
                 format: int32
                 type: integer
             sources:
                 description: |-
                     sources is the list of volume projections. Each entry in this list
                     handles one source.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/VolumeProjection'
                 type: array
@@ -3278,13 +2772,10 @@ definitions:
                 type: string
         type: object
     Protocol:
-        description: +enum
         title: Protocol defines network protocols supported for things like container ports.
         type: string
     PullPolicy:
-        description: |-
-            PullPolicy describes a policy for if/when to pull a container image
-            +enum
+        description: PullPolicy describes a policy for if/when to pull a container image
         type: string
     Quantity:
         description: |-
@@ -3325,16 +2816,16 @@ definitions:
             This means that Exponent/suffix will be adjusted up or down (with a
             corresponding increase or decrease in Mantissa) such that:
 
-            No precision is lost
-            No fractional digits will be emitted
-            The exponent (or suffix) is as large as possible.
+            - No precision is lost
+            - No fractional digits will be emitted
+            - The exponent (or suffix) is as large as possible.
 
             The sign will be omitted unless the number is negative.
 
             Examples:
 
-            1.5 will be serialized as "1500m"
-            1.5Gi will be serialized as "1536Mi"
+            - 1.5 will be serialized as "1500m"
+            - 1.5Gi will be serialized as "1536Mi"
 
             Note that the quantity will NEVER be internally represented by a
             floating point number. That is the whole point of this exercise.
@@ -3346,13 +2837,6 @@ definitions:
             This format is intended to make it difficult to use these numbers without
             writing some sort of special handling code in the hopes that that will
             cause implementors to also use a fixed point implementation.
-
-            +protobuf=true
-            +protobuf.embed=string
-            +protobuf.options.marshal=false
-            +protobuf.options.(gogoproto.goproto_stringer)=false
-            +k8s:deepcopy-gen=true
-            +k8s:openapi-gen=true
         title: |-
             Quantity is a fixed-point representation of a number.
             It provides convenient marshaling/unmarshaling in JSON and YAML,
@@ -3365,13 +2849,11 @@ definitions:
                 description: |-
                     group to map volume access to
                     Default is no group
-                    +optional
                 type: string
             readOnly:
                 description: |-
                     readOnly here will force the Quobyte volume to be mounted with read-only permissions.
                     Defaults to false.
-                    +optional
                 type: boolean
             registry:
                 description: |-
@@ -3383,13 +2865,11 @@ definitions:
                 description: |-
                     tenant owning the given Quobyte volume in the Backend
                     Used with dynamically provisioned Quobyte volumes, value is set by the plugin
-                    +optional
                 type: string
             user:
                 description: |-
                     user to map volume access to
                     Defaults to serivceaccount user
-                    +optional
                 type: string
             volume:
                 description: volume is a string that references an already created Quobyte volume by name.
@@ -3406,7 +2886,6 @@ definitions:
                     Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#rbd
                     TODO: how do we prevent errors in the filesystem from compromising the machine
-                    +optional
                 type: string
             image:
                 description: |-
@@ -3418,14 +2897,11 @@ definitions:
                     keyring is the path to key ring for RBDUser.
                     Default is /etc/ceph/keyring.
                     More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
-                    +optional
-                    +default="/etc/ceph/keyring"
                 type: string
             monitors:
                 description: |-
                     monitors is a collection of Ceph monitors.
                     More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -3434,15 +2910,12 @@ definitions:
                     pool is the rados pool name.
                     Default is rbd.
                     More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
-                    +optional
-                    +default="rbd"
                 type: string
             readOnly:
                 description: |-
                     readOnly here will force the ReadOnly setting in VolumeMounts.
                     Defaults to false.
                     More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
-                    +optional
                 type: boolean
             secretRef:
                 $ref: '#/definitions/LocalObjectReference'
@@ -3451,8 +2924,6 @@ definitions:
                     user is the rados user name.
                     Default is admin.
                     More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
-                    +optional
-                    +default="admin"
                 type: string
         title: Represents a Rados Block Device mount that lasts the lifetime of a pod.
         type: object
@@ -3479,25 +2950,18 @@ definitions:
                     Request is the name chosen for a request in the referenced claim.
                     If empty, everything from the claim is made available, otherwise
                     only the result of this request.
-
-                    +optional
                 type: string
         title: ResourceClaim references one entry in PodSpec.ResourceClaims.
         type: object
     ResourceFieldSelector:
-        description: |-
-            ResourceFieldSelector represents container resources (cpu, memory) and their output format
-            +structType=atomic
+        description: ResourceFieldSelector represents container resources (cpu, memory) and their output format
         properties:
             containerName:
-                description: |-
-                    Container name: required for volumes, optional for env vars
-                    +optional
+                description: 'Container name: required for volumes, optional for env vars'
                 type: string
             divisor:
                 $ref: '#/definitions/Quantity'
             resource:
-                description: 'Required: resource to select'
                 type: string
         type: object
     ResourceList:
@@ -3519,11 +2983,6 @@ definitions:
                     DynamicResourceAllocation feature gate.
 
                     This field is immutable. It can only be set for containers.
-
-                    +listType=map
-                    +listMapKey=name
-                    +featureGate=DynamicResourceAllocation
-                    +optional
                 items:
                     $ref: '#/definitions/ResourceClaim'
                 type: array
@@ -3663,24 +3122,16 @@ definitions:
         description: SELinuxOptions are the labels to be applied to the container
         properties:
             level:
-                description: |-
-                    Level is SELinux level label that applies to the container.
-                    +optional
+                description: Level is SELinux level label that applies to the container.
                 type: string
             role:
-                description: |-
-                    Role is a SELinux role label that applies to the container.
-                    +optional
+                description: Role is a SELinux role label that applies to the container.
                 type: string
             type:
-                description: |-
-                    Type is a SELinux type label that applies to the container.
-                    +optional
+                description: Type is a SELinux type label that applies to the container.
                 type: string
             user:
-                description: |-
-                    User is a SELinux user label that applies to the container.
-                    +optional
+                description: User is a SELinux user label that applies to the container.
                 type: string
         type: object
     ScaleIOVolumeSource:
@@ -3692,41 +3143,30 @@ definitions:
                     Must be a filesystem type supported by the host operating system.
                     Ex. "ext4", "xfs", "ntfs".
                     Default is "xfs".
-                    +optional
-                    +default="xfs"
                 type: string
             gateway:
                 description: gateway is the host address of the ScaleIO API Gateway.
                 type: string
             protectionDomain:
-                description: |-
-                    protectionDomain is the name of the ScaleIO Protection Domain for the configured storage.
-                    +optional
+                description: protectionDomain is the name of the ScaleIO Protection Domain for the configured storage.
                 type: string
             readOnly:
                 description: |-
                     readOnly Defaults to false (read/write). ReadOnly here will force
                     the ReadOnly setting in VolumeMounts.
-                    +optional
                 type: boolean
             secretRef:
                 $ref: '#/definitions/LocalObjectReference'
             sslEnabled:
-                description: |-
-                    sslEnabled Flag enable/disable SSL communication with Gateway, default false
-                    +optional
+                description: sslEnabled Flag enable/disable SSL communication with Gateway, default false
                 type: boolean
             storageMode:
                 description: |-
                     storageMode indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned.
                     Default is ThinProvisioned.
-                    +optional
-                    +default="ThinProvisioned"
                 type: string
             storagePool:
-                description: |-
-                    storagePool is the ScaleIO Storage Pool associated with the protection domain.
-                    +optional
+                description: storagePool is the ScaleIO Storage Pool associated with the protection domain.
                 type: string
             system:
                 description: system is the name of the storage system as configured in ScaleIO.
@@ -3750,8 +3190,6 @@ definitions:
                     produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless
                     of whether the variable exists or not. Cannot be updated.
                     More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -3765,8 +3203,6 @@ definitions:
                     produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless
                     of whether the variable exists or not. Cannot be updated.
                     More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -3774,11 +3210,6 @@ definitions:
                 description: |-
                     List of environment variables to set in the container.
                     Cannot be updated.
-                    +optional
-                    +patchMergeKey=name
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=name
                 items:
                     $ref: '#/definitions/EnvVar'
                 type: array
@@ -3790,8 +3221,6 @@ definitions:
                     sources, the value associated with the last source will take precedence.
                     Values defined by an Env with a duplicate key will take precedence.
                     Cannot be updated.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/EnvFromSource'
                 type: array
@@ -3801,7 +3230,6 @@ definitions:
                     More info: https://kubernetes.io/docs/concepts/containers/images
                     This field is optional to allow higher level config management to default or override
                     container images in workload controllers like Deployments and StatefulSets.
-                    +optional
                 type: string
             imagePullPolicy:
                 $ref: '#/definitions/PullPolicy'
@@ -3824,23 +3252,13 @@ definitions:
                     Modifying this array with strategic merge patch may corrupt the data.
                     For more information See https://github.com/kubernetes/kubernetes/issues/108255.
                     Cannot be updated.
-                    +optional
-                    +patchMergeKey=containerPort
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=containerPort
-                    +listMapKey=protocol
                 items:
                     $ref: '#/definitions/ContainerPort'
                 type: array
             readinessProbe:
                 $ref: '#/definitions/Probe'
             resizePolicy:
-                description: |-
-                    Resources resize policy for the container.
-                    +featureGate=InPlacePodVerticalScaling
-                    +optional
-                    +listType=atomic
+                description: Resources resize policy for the container.
                 items:
                     $ref: '#/definitions/ContainerResizePolicy'
                 type: array
@@ -3860,7 +3278,6 @@ definitions:
                     Whether this container should allocate a buffer for stdin in the container runtime. If this
                     is not set, reads from stdin in the container will always result in EOF.
                     Default is false.
-                    +optional
                 type: boolean
             stdinOnce:
                 description: |-
@@ -3871,7 +3288,6 @@ definitions:
                     at which time stdin is closed and remains closed until the container is restarted. If this
                     flag is false, a container processes that reads from stdin will never receive an EOF.
                     Default is false
-                    +optional
                 type: boolean
             terminationMessagePath:
                 description: |-
@@ -3882,7 +3298,6 @@ definitions:
                     all containers will be limited to 12kb.
                     Defaults to /dev/termination-log.
                     Cannot be updated.
-                    +optional
                 type: string
             terminationMessagePolicy:
                 $ref: '#/definitions/TerminationMessagePolicy'
@@ -3890,16 +3305,9 @@ definitions:
                 description: |-
                     Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.
                     Default is false.
-                    +optional
                 type: boolean
             volumeDevices:
-                description: |-
-                    volumeDevices is the list of block devices to be used by the container.
-                    +patchMergeKey=devicePath
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=devicePath
-                    +optional
+                description: volumeDevices is the list of block devices to be used by the container.
                 items:
                     $ref: '#/definitions/VolumeDevice'
                 type: array
@@ -3907,11 +3315,6 @@ definitions:
                 description: |-
                     Pod volumes to mount into the container's filesystem.
                     Cannot be updated.
-                    +optional
-                    +patchMergeKey=mountPath
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=mountPath
                 items:
                     $ref: '#/definitions/VolumeMount'
                 type: array
@@ -3921,13 +3324,10 @@ definitions:
                     If not specified, the container runtime's default will be used, which
                     might be configured in the container image.
                     Cannot be updated.
-                    +optional
                 type: string
         type: object
     SeccompProfile:
-        description: |-
-            Only one profile source may be set.
-            +union
+        description: Only one profile source may be set.
         properties:
             localhostProfile:
                 description: |-
@@ -3935,14 +3335,12 @@ definitions:
                     The profile must be preconfigured on the node to work.
                     Must be a descending path, relative to the kubelet's configured seccomp profile location.
                     Must be set if type is "Localhost". Must NOT be set for any other type.
-                    +optional
                 type: string
             type:
                 $ref: '#/definitions/SeccompProfileType'
         title: SeccompProfile defines a pod/container's seccomp profile settings.
         type: object
     SeccompProfileType:
-        description: +enum
         title: SeccompProfileType defines the supported seccomp profile types.
         type: string
     SecretEnvSource:
@@ -3957,22 +3355,16 @@ definitions:
                     allowed to be empty. Instances of this type with an empty value here are
                     almost certainly wrong.
                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    +optional
-                    +default=""
-                    +kubebuilder:default=""
                     TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
                 type: string
             optional:
-                description: |-
-                    Specify whether the Secret must be defined
-                    +optional
+                description: Specify whether the Secret must be defined
                 type: boolean
         title: |-
             SecretEnvSource selects a Secret to populate the environment
             variables with.
         type: object
     SecretKeySelector:
-        description: +structType=atomic
         properties:
             key:
                 description: The key of the secret to select from.  Must be a valid secret key.
@@ -3984,15 +3376,10 @@ definitions:
                     allowed to be empty. Instances of this type with an empty value here are
                     almost certainly wrong.
                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    +optional
-                    +default=""
-                    +kubebuilder:default=""
                     TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
                 type: string
             optional:
-                description: |-
-                    Specify whether the Secret or its key must be defined
-                    +optional
+                description: Specify whether the Secret or its key must be defined
                 type: boolean
         title: SecretKeySelector selects a key of a Secret.
         type: object
@@ -4012,8 +3399,6 @@ definitions:
                     present. If a key is specified which is not present in the Secret,
                     the volume setup will error unless it is marked optional. Paths must be
                     relative and may not contain the '..' path or start with '..'.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/KeyToPath'
                 type: array
@@ -4024,15 +3409,10 @@ definitions:
                     allowed to be empty. Instances of this type with an empty value here are
                     almost certainly wrong.
                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                    +optional
-                    +default=""
-                    +kubebuilder:default=""
                     TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
                 type: string
             optional:
-                description: |-
-                    optional field specify whether the Secret or its key must be defined
-                    +optional
+                description: optional field specify whether the Secret or its key must be defined
                 type: boolean
         title: Adapts a secret into a projected volume.
         type: object
@@ -4051,7 +3431,6 @@ definitions:
                     Directories within the path are not affected by this setting.
                     This might be in conflict with other options that affect the file
                     mode, like fsGroup, and the result can be other mode bits set.
-                    +optional
                 format: int32
                 type: integer
             items:
@@ -4063,21 +3442,16 @@ definitions:
                     present. If a key is specified which is not present in the Secret,
                     the volume setup will error unless it is marked optional. Paths must be
                     relative and may not contain the '..' path or start with '..'.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/KeyToPath'
                 type: array
             optional:
-                description: |-
-                    optional field specify whether the Secret or its keys must be defined
-                    +optional
+                description: optional field specify whether the Secret or its keys must be defined
                 type: boolean
             secretName:
                 description: |-
                     secretName is the name of the secret in the pod's namespace to use.
                     More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
-                    +optional
                 type: string
         title: Adapts a Secret into a volume.
         type: object
@@ -4095,7 +3469,6 @@ definitions:
                     1) run as Privileged
                     2) has CAP_SYS_ADMIN
                     Note that this field cannot be set when spec.os.name is windows.
-                    +optional
                 type: boolean
             appArmorProfile:
                 $ref: '#/definitions/AppArmorProfile'
@@ -4107,7 +3480,6 @@ definitions:
                     Processes in privileged containers are essentially equivalent to root on the host.
                     Defaults to false.
                     Note that this field cannot be set when spec.os.name is windows.
-                    +optional
                 type: boolean
             procMount:
                 $ref: '#/definitions/ProcMountType'
@@ -4116,7 +3488,6 @@ definitions:
                     Whether this container has a read-only root filesystem.
                     Default is false.
                     Note that this field cannot be set when spec.os.name is windows.
-                    +optional
                 type: boolean
             runAsGroup:
                 description: |-
@@ -4125,7 +3496,6 @@ definitions:
                     May also be set in PodSecurityContext.  If set in both SecurityContext and
                     PodSecurityContext, the value specified in SecurityContext takes precedence.
                     Note that this field cannot be set when spec.os.name is windows.
-                    +optional
                 format: int64
                 type: integer
             runAsNonRoot:
@@ -4136,7 +3506,6 @@ definitions:
                     If unset or false, no such validation will be performed.
                     May also be set in PodSecurityContext.  If set in both SecurityContext and
                     PodSecurityContext, the value specified in SecurityContext takes precedence.
-                    +optional
                 type: boolean
             runAsUser:
                 description: |-
@@ -4145,7 +3514,6 @@ definitions:
                     May also be set in PodSecurityContext.  If set in both SecurityContext and
                     PodSecurityContext, the value specified in SecurityContext takes precedence.
                     Note that this field cannot be set when spec.os.name is windows.
-                    +optional
                 format: int64
                 type: integer
             seLinuxOptions:
@@ -4162,7 +3530,7 @@ definitions:
             configMapKeyRef:
                 $ref: '#/definitions/ConfigMapKeySelector'
             namespace:
-                default: '[namespace of workflow]'
+                description: 'Namespace is the namespace of the configmap, default: [namespace of workflow]'
                 type: string
         type: object
     Sequence:
@@ -4191,7 +3559,6 @@ definitions:
                     must identify itself with an identifier specified in the audience of the
                     token, and otherwise should reject the token. The audience defaults to the
                     identifier of the apiserver.
-                    +optional
                 type: string
             expirationSeconds:
                 description: |-
@@ -4201,7 +3568,6 @@ definitions:
                     start trying to rotate the token if the token is older than 80 percent of
                     its time to live or if the token is older than 24 hours.Defaults to 1 hour
                     and must be at least 10 minutes.
-                    +optional
                 format: int64
                 type: integer
             path:
@@ -4228,13 +3594,11 @@ definitions:
                     fsType is the filesystem type to mount.
                     Must be a filesystem type supported by the host operating system.
                     Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-                    +optional
                 type: string
             readOnly:
                 description: |-
                     readOnly defaults to false (read/write). ReadOnly here will force
                     the ReadOnly setting in VolumeMounts.
-                    +optional
                 type: boolean
             secretRef:
                 $ref: '#/definitions/LocalObjectReference'
@@ -4251,7 +3615,6 @@ definitions:
                     Set VolumeName to any name to override the default behaviour.
                     Set to "default" if you are not using namespaces within StorageOS.
                     Namespaces that do not pre-exist within StorageOS will be created.
-                    +optional
                 type: string
         title: Represents a StorageOS persistent volume resource.
         type: object
@@ -4259,7 +3622,6 @@ definitions:
         description: |-
             SupplementalGroupsPolicy defines how supplemental groups
             of the first container processes are calculated.
-            +enum
         type: string
     SuppliedValueFrom:
         title: SuppliedValueFrom is a placeholder for a value to be filled in directly, either through the CLI, API, etc.
@@ -4305,15 +3667,12 @@ definitions:
         description: TCPSocketAction describes an action based on opening a socket
         properties:
             host:
-                description: |-
-                    Optional: Host name to connect to, defaults to the pod IP.
-                    +optional
+                description: 'Optional: Host name to connect to, defaults to the pod IP.'
                 type: string
             port:
                 $ref: '#/definitions/IntOrString'
         type: object
     TaintEffect:
-        description: +enum
         type: string
     TarStrategy:
         description: TarStrategy will tar and gzip the file or directory when saving
@@ -4358,20 +3717,14 @@ definitions:
                     template is expanded with `withItems`, etc.
                 type: boolean
             hostAliases:
-                description: |-
-                    HostAliases is an optional list of hosts and IPs that will be injected into the pod spec
-                    +patchStrategy=merge
-                    +patchMergeKey=ip
+                description: HostAliases is an optional list of hosts and IPs that will be injected into the pod spec
                 items:
                     $ref: '#/definitions/HostAlias'
                 type: array
             http:
                 $ref: '#/definitions/HTTP'
             initContainers:
-                description: |-
-                    InitContainers is a list of containers which run before the main container.
-                    +patchStrategy=merge
-                    +patchMergeKey=name
+                description: InitContainers is a list of containers which run before the main container.
                 items:
                     $ref: '#/definitions/UserContainer'
                 type: array
@@ -4425,7 +3778,6 @@ definitions:
                     If specified, the pod will be dispatched by specified scheduler.
                     Or it will be dispatched by workflow scope scheduler if specified.
                     If neither specified, the pod will be dispatched by default scheduler.
-                    +optional
                 type: string
             script:
                 $ref: '#/definitions/ScriptTemplate'
@@ -4438,8 +3790,6 @@ definitions:
                 description: |-
                     Sidecars is a list of containers which run alongside the main container
                     Sidecars are automatically killed when the main container completes
-                    +patchStrategy=merge
-                    +patchMergeKey=name
                 items:
                     $ref: '#/definitions/UserContainer'
                 type: array
@@ -4458,18 +3808,12 @@ definitions:
                     This duration also includes time in which the node spends in Pending state. This duration may not be applied to Step or DAG templates.
                 type: string
             tolerations:
-                description: |-
-                    Tolerations to apply to workflow pods.
-                    +patchStrategy=merge
-                    +patchMergeKey=key
+                description: Tolerations to apply to workflow pods.
                 items:
                     $ref: '#/definitions/Toleration'
                 type: array
             volumes:
-                description: |-
-                    Volumes is a list of volumes that can be mounted by containers in a template.
-                    +patchStrategy=merge
-                    +patchMergeKey=name
+                description: Volumes is a list of volumes that can be mounted by containers in a template.
                 items:
                     $ref: '#/definitions/Volume'
                 type: array
@@ -4488,7 +3832,6 @@ definitions:
         title: TemplateRef is a reference of template resource.
         type: object
     TerminationMessagePolicy:
-        description: +enum
         title: TerminationMessagePolicy describes how termination messages are retrieved from a container.
         type: string
     Toleration:
@@ -4502,7 +3845,6 @@ definitions:
                 description: |-
                     Key is the taint key that the toleration applies to. Empty means match all taint keys.
                     If the key is empty, operator must be Exists; this combination means to match all values and all keys.
-                    +optional
                 type: string
             operator:
                 $ref: '#/definitions/TolerationOperator'
@@ -4512,18 +3854,15 @@ definitions:
                     of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
                     it is not set, which means tolerate the taint forever (do not evict). Zero and
                     negative values will be treated as 0 (evict immediately) by the system.
-                    +optional
                 format: int64
                 type: integer
             value:
                 description: |-
                     Value is the taint value the toleration matches to.
                     If the operator is Exists, the value should be empty, otherwise just a regular string.
-                    +optional
                 type: string
         type: object
     TolerationOperator:
-        description: +enum
         title: A toleration operator is the set of operators that can be used in a toleration.
         type: string
     Transformation:
@@ -4542,27 +3881,14 @@ definitions:
         type: integer
     TypedLocalObjectReference:
         description: |-
-            New uses of this type are discouraged because of difficulty describing its usage when embedded in APIs.
-            1. Invalid usage help.  It is impossible to add specific help for individual usage.  In most embedded usages, there are particular
-            restrictions like, "must refer only to types A and B" or "UID not honored" or "name must be restricted".
-            Those cannot be well described when embedded.
-            2. Inconsistent validation.  Because the usages are different, the validation rules are different by usage, which makes it hard for users to predict what will happen.
-            3. The fields are both imprecise and overly precise.  Kind is not a precise mapping to a URL. This can produce ambiguity
-            during interpretation and require a REST mapping.  In most cases, the dependency is on the group,resource tuple
-            and the version of the actual struct is irrelevant.
-            4. We cannot easily change it.  Because this type is embedded in many locations, updates to this type
-            will affect numerous schemas.  Don't make new APIs embed an underspecified API type they do not control.
-
-            Instead of using this type, create a locally provided and used type that is well-focused on your reference.
-            For example, ServiceReferences for admission registration: https://github.com/kubernetes/api/blob/release-1.17/admissionregistration/v1/types.go#L533 .
-            +structType=atomic
+            TypedLocalObjectReference contains enough information to let you locate the
+            typed referenced object inside the same namespace.
         properties:
             apiGroup:
                 description: |-
                     APIGroup is the group for the resource being referenced.
                     If APIGroup is not specified, the specified Kind must be in the core API group.
                     For any other third-party types, APIGroup is required.
-                    +optional
                 type: string
             kind:
                 description: Kind is the type of resource being referenced
@@ -4570,9 +3896,6 @@ definitions:
             name:
                 description: Name is the name of resource being referenced
                 type: string
-        title: |-
-            TypedLocalObjectReference contains enough information to let you locate the
-            typed referenced object inside the same namespace.
         type: object
     TypedObjectReference:
         description: TypedObjectReference contains enough information to let you locate the typed referenced object
@@ -4582,7 +3905,6 @@ definitions:
                     APIGroup is the group for the resource being referenced.
                     If APIGroup is not specified, the specified Kind must be in the core API group.
                     For any other third-party types, APIGroup is required.
-                    +optional
                 type: string
             kind:
                 description: Kind is the type of resource being referenced
@@ -4595,8 +3917,6 @@ definitions:
                     Namespace is the namespace of resource being referenced
                     Note that when a namespace is specified, a gateway.networking.k8s.io/ReferenceGrant object is required in the referent namespace to allow that namespace's owner to accept the reference. See the ReferenceGrant documentation for details.
                     (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
-                    +featureGate=CrossNamespaceVolumeDataSource
-                    +optional
                 type: string
         type: object
     UID:
@@ -4606,9 +3926,7 @@ definitions:
             intent and helps make sure that UIDs and names do not get conflated.
         type: string
     URIScheme:
-        description: |-
-            URIScheme identifies the scheme used for connection to a host for Get actions
-            +enum
+        description: URIScheme identifies the scheme used for connection to a host for Get actions
         type: string
     UserContainer:
         properties:
@@ -4622,8 +3940,6 @@ definitions:
                     produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless
                     of whether the variable exists or not. Cannot be updated.
                     More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -4637,8 +3953,6 @@ definitions:
                     produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless
                     of whether the variable exists or not. Cannot be updated.
                     More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
-                    +optional
-                    +listType=atomic
                 items:
                     type: string
                 type: array
@@ -4646,11 +3960,6 @@ definitions:
                 description: |-
                     List of environment variables to set in the container.
                     Cannot be updated.
-                    +optional
-                    +patchMergeKey=name
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=name
                 items:
                     $ref: '#/definitions/EnvVar'
                 type: array
@@ -4662,8 +3971,6 @@ definitions:
                     sources, the value associated with the last source will take precedence.
                     Values defined by an Env with a duplicate key will take precedence.
                     Cannot be updated.
-                    +optional
-                    +listType=atomic
                 items:
                     $ref: '#/definitions/EnvFromSource'
                 type: array
@@ -4673,7 +3980,6 @@ definitions:
                     More info: https://kubernetes.io/docs/concepts/containers/images
                     This field is optional to allow higher level config management to default or override
                     container images in workload controllers like Deployments and StatefulSets.
-                    +optional
                 type: string
             imagePullPolicy:
                 $ref: '#/definitions/PullPolicy'
@@ -4703,23 +4009,13 @@ definitions:
                     Modifying this array with strategic merge patch may corrupt the data.
                     For more information See https://github.com/kubernetes/kubernetes/issues/108255.
                     Cannot be updated.
-                    +optional
-                    +patchMergeKey=containerPort
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=containerPort
-                    +listMapKey=protocol
                 items:
                     $ref: '#/definitions/ContainerPort'
                 type: array
             readinessProbe:
                 $ref: '#/definitions/Probe'
             resizePolicy:
-                description: |-
-                    Resources resize policy for the container.
-                    +featureGate=InPlacePodVerticalScaling
-                    +optional
-                    +listType=atomic
+                description: Resources resize policy for the container.
                 items:
                     $ref: '#/definitions/ContainerResizePolicy'
                 type: array
@@ -4736,7 +4032,6 @@ definitions:
                     Whether this container should allocate a buffer for stdin in the container runtime. If this
                     is not set, reads from stdin in the container will always result in EOF.
                     Default is false.
-                    +optional
                 type: boolean
             stdinOnce:
                 description: |-
@@ -4747,7 +4042,6 @@ definitions:
                     at which time stdin is closed and remains closed until the container is restarted. If this
                     flag is false, a container processes that reads from stdin will never receive an EOF.
                     Default is false
-                    +optional
                 type: boolean
             terminationMessagePath:
                 description: |-
@@ -4758,7 +4052,6 @@ definitions:
                     all containers will be limited to 12kb.
                     Defaults to /dev/termination-log.
                     Cannot be updated.
-                    +optional
                 type: string
             terminationMessagePolicy:
                 $ref: '#/definitions/TerminationMessagePolicy'
@@ -4766,16 +4059,9 @@ definitions:
                 description: |-
                     Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.
                     Default is false.
-                    +optional
                 type: boolean
             volumeDevices:
-                description: |-
-                    volumeDevices is the list of block devices to be used by the container.
-                    +patchMergeKey=devicePath
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=devicePath
-                    +optional
+                description: volumeDevices is the list of block devices to be used by the container.
                 items:
                     $ref: '#/definitions/VolumeDevice'
                 type: array
@@ -4783,11 +4069,6 @@ definitions:
                 description: |-
                     Pod volumes to mount into the container's filesystem.
                     Cannot be updated.
-                    +optional
-                    +patchMergeKey=mountPath
-                    +patchStrategy=merge
-                    +listType=map
-                    +listMapKey=mountPath
                 items:
                     $ref: '#/definitions/VolumeMount'
                 type: array
@@ -4797,9 +4078,192 @@ definitions:
                     If not specified, the container runtime's default will be used, which
                     might be configured in the container image.
                     Cannot be updated.
-                    +optional
                 type: string
         title: UserContainer is a container specified by a user.
+        type: object
+    V1HTTPHeader:
+        description: HTTPHeader describes a custom header to be used in HTTP probes
+        properties:
+            name:
+                description: |-
+                    The header field name.
+                    This will be canonicalized upon output, so case-variant names will be understood as the same header.
+                type: string
+            value:
+                description: The header field value
+                type: string
+        type: object
+    V1ObjectMeta:
+        description: |-
+            ObjectMeta is metadata that all persisted resources must have, which includes all objects
+            users must create.
+        properties:
+            annotations:
+                additionalProperties:
+                    type: string
+                description: |-
+                    Annotations is an unstructured key value map stored with a resource that may be
+                    set by external tools to store and retrieve arbitrary metadata. They are not
+                    queryable and should be preserved when modifying objects.
+                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations
+                type: object
+            creationTimestamp:
+                description: |-
+                    CreationTimestamp is a timestamp representing the server time when this object was
+                    created. It is not guaranteed to be set in happens-before order across separate operations.
+                    Clients may not set this value. It is represented in RFC3339 form and is in UTC.
+
+                    Populated by the system.
+                    Read-only.
+                    Null for lists.
+                    More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+                type: string
+            deletionGracePeriodSeconds:
+                description: |-
+                    Number of seconds allowed for this object to gracefully terminate before
+                    it will be removed from the system. Only set when deletionTimestamp is also set.
+                    May only be shortened.
+                    Read-only.
+                format: int64
+                type: integer
+            deletionTimestamp:
+                description: |-
+                    DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted. This
+                    field is set by the server when a graceful deletion is requested by the user, and is not
+                    directly settable by a client. The resource is expected to be deleted (no longer visible
+                    from resource lists, and not reachable by name) after the time in this field, once the
+                    finalizers list is empty. As long as the finalizers list contains items, deletion is blocked.
+                    Once the deletionTimestamp is set, this value may not be unset or be set further into the
+                    future, although it may be shortened or the resource may be deleted prior to this time.
+                    For example, a user may request that a pod is deleted in 30 seconds. The Kubelet will react
+                    by sending a graceful termination signal to the containers in the pod. After that 30 seconds,
+                    the Kubelet will send a hard termination signal (SIGKILL) to the container and after cleanup,
+                    remove the pod from the API. In the presence of network partitions, this object may still
+                    exist after this timestamp, until an administrator or automated process can determine the
+                    resource is fully terminated.
+                    If not set, graceful deletion of the object has not been requested.
+
+                    Populated by the system when a graceful deletion is requested.
+                    Read-only.
+                    More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+                type: string
+            finalizers:
+                description: |-
+                    Must be empty before the object is deleted from the registry. Each entry
+                    is an identifier for the responsible component that will remove the entry
+                    from the list. If the deletionTimestamp of the object is non-nil, entries
+                    in this list can only be removed.
+                    Finalizers may be processed and removed in any order.  Order is NOT enforced
+                    because it introduces significant risk of stuck finalizers.
+                    finalizers is a shared field, any actor with permission can reorder it.
+                    If the finalizer list is processed in order, then this can lead to a situation
+                    in which the component responsible for the first finalizer in the list is
+                    waiting for a signal (field value, external system, or other) produced by a
+                    component responsible for a finalizer later in the list, resulting in a deadlock.
+                    Without enforced ordering finalizers are free to order amongst themselves and
+                    are not vulnerable to ordering changes in the list.
+                items:
+                    type: string
+                type: array
+            generateName:
+                description: |-
+                    GenerateName is an optional prefix, used by the server, to generate a unique
+                    name ONLY IF the Name field has not been provided.
+                    If this field is used, the name returned to the client will be different
+                    than the name passed. This value will also be combined with a unique suffix.
+                    The provided value has the same validation rules as the Name field,
+                    and may be truncated by the length of the suffix required to make the value
+                    unique on the server.
+
+                    If this field is specified and the generated name exists, the server will return a 409.
+
+                    Applied only if Name is not specified.
+                    More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#idempotency
+                type: string
+            generation:
+                description: |-
+                    A sequence number representing a specific generation of the desired state.
+                    Populated by the system. Read-only.
+                format: int64
+                type: integer
+            labels:
+                additionalProperties:
+                    type: string
+                description: |-
+                    Map of string keys and values that can be used to organize and categorize
+                    (scope and select) objects. May match selectors of replication controllers
+                    and services.
+                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels
+                type: object
+            managedFields:
+                description: |-
+                    ManagedFields maps workflow-id and version to the set of fields
+                    that are managed by that workflow. This is mostly for internal
+                    housekeeping, and users typically shouldn't need to set or
+                    understand this field. A workflow can be the user's name, a
+                    controller's name, or the name of a specific apply path like
+                    "ci-cd". The set of fields is always in the version that the
+                    workflow used when modifying the object.
+                items:
+                    $ref: '#/definitions/ManagedFieldsEntry'
+                type: array
+            name:
+                description: |-
+                    Name must be unique within a namespace. Is required when creating resources, although
+                    some resources may allow a client to request the generation of an appropriate name
+                    automatically. Name is primarily intended for creation idempotence and configuration
+                    definition.
+                    Cannot be updated.
+                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names
+                type: string
+            namespace:
+                description: |-
+                    Namespace defines the space within which each name must be unique. An empty namespace is
+                    equivalent to the "default" namespace, but "default" is the canonical representation.
+                    Not all objects are required to be scoped to a namespace - the value of this field for
+                    those objects will be empty.
+
+                    Must be a DNS_LABEL.
+                    Cannot be updated.
+                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces
+                type: string
+            ownerReferences:
+                description: |-
+                    List of objects depended by this object. If ALL objects in the list have
+                    been deleted, this object will be garbage collected. If this object is managed by a controller,
+                    then an entry in this list will point to this controller, with the controller field set to true.
+                    There cannot be more than one managing controller.
+                items:
+                    $ref: '#/definitions/OwnerReference'
+                type: array
+            resourceVersion:
+                description: |-
+                    An opaque value that represents the internal version of this object that can
+                    be used by clients to determine when objects have changed. May be used for optimistic
+                    concurrency, change detection, and the watch operation on a resource or set of resources.
+                    Clients must treat these values as opaque and passed unmodified back to the server.
+                    They may only be valid for a particular resource or set of resources.
+
+                    Populated by the system.
+                    Read-only.
+                    Value must be treated as opaque by clients and .
+                    More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+                type: string
+            selfLink:
+                description: 'Deprecated: selfLink is a legacy read-only field that is no longer populated by the system.'
+                type: string
+                x-deprecated: true
+            uid:
+                $ref: '#/definitions/UID'
+        type: object
+    V1alpha1HTTPHeader:
+        properties:
+            name:
+                type: string
+            value:
+                type: string
+            valueFrom:
+                $ref: '#/definitions/HTTPHeaderSource'
         type: object
     ValueFrom:
         description: ValueFrom describes a location in which to obtain the value to a parameter
@@ -4927,7 +4391,6 @@ definitions:
                 description: |-
                     Mounted read-only if true, read-write otherwise (false or unspecified).
                     Defaults to false.
-                    +optional
                 type: boolean
             recursiveReadOnly:
                 $ref: '#/definitions/RecursiveReadOnlyMode'
@@ -4935,7 +4398,6 @@ definitions:
                 description: |-
                     Path within the volume from which the container's volume should be mounted.
                     Defaults to "" (volume's root).
-                    +optional
                 type: string
             subPathExpr:
                 description: |-
@@ -4943,7 +4405,6 @@ definitions:
                     Behaves similarly to SubPath but environment variable references $(VAR_NAME) are expanded using the container's environment.
                     Defaults to "" (volume's root).
                     SubPathExpr and SubPath are mutually exclusive.
-                    +optional
                 type: string
         title: VolumeMount describes a mounting of a Volume within a container.
         type: object
@@ -4977,17 +4438,12 @@ definitions:
                     fsType is filesystem type to mount.
                     Must be a filesystem type supported by the host operating system.
                     Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-                    +optional
                 type: string
             storagePolicyID:
-                description: |-
-                    storagePolicyID is the storage Policy Based Management (SPBM) profile ID associated with the StoragePolicyName.
-                    +optional
+                description: storagePolicyID is the storage Policy Based Management (SPBM) profile ID associated with the StoragePolicyName.
                 type: string
             storagePolicyName:
-                description: |-
-                    storagePolicyName is the storage Policy Based Management (SPBM) profile name.
-                    +optional
+                description: storagePolicyName is the storage Policy Based Management (SPBM) profile name.
                 type: string
             volumePath:
                 description: volumePath is the path that identifies vSphere volume vmdk
@@ -5013,12 +4469,9 @@ definitions:
                     GMSACredentialSpec is where the GMSA admission webhook
                     (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the
                     GMSA credential spec named by the GMSACredentialSpecName field.
-                    +optional
                 type: string
             gmsaCredentialSpecName:
-                description: |-
-                    GMSACredentialSpecName is the name of the GMSA credential spec to use.
-                    +optional
+                description: GMSACredentialSpecName is the name of the GMSA credential spec to use.
                 type: string
             hostProcess:
                 description: |-
@@ -5026,7 +4479,6 @@ definitions:
                     All of a Pod's containers must have the same effective HostProcess value
                     (it is not allowed to have a mix of HostProcess containers and non-HostProcess containers).
                     In addition, if HostProcess is true then HostNetwork must also be set to true.
-                    +optional
                 type: boolean
             runAsUserName:
                 description: |-
@@ -5034,14 +4486,13 @@ definitions:
                     Defaults to the user specified in image metadata if unspecified.
                     May also be set in PodSecurityContext. If set in both SecurityContext and
                     PodSecurityContext, the value specified in SecurityContext takes precedence.
-                    +optional
                 type: string
         title: WindowsSecurityContextOptions contain Windows-specific options and credentials.
         type: object
     Workflow:
         properties:
             metadata:
-                $ref: '#/definitions/ObjectMeta'
+                $ref: '#/definitions/ExecutorObjectMeta'
         required:
             - metadata
         type: object

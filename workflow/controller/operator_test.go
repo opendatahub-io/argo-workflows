@@ -5442,6 +5442,160 @@ func TestValidReferenceMode(t *testing.T) {
 	assert.Equal(t, wfv1.WorkflowError, woc.wf.Status.Phase)
 }
 
+func TestReferenceModeBlocksDisallowedFields(t *testing.T) {
+	wf := wfv1.MustUnmarshalWorkflow("@testdata/workflow-template-ref.yaml")
+	wfTmpl := wfv1.MustUnmarshalWorkflowTemplate("@testdata/workflow-template-submittable.yaml")
+
+	t.Run("Strict rejects podSpecPatch", func(t *testing.T) {
+		wfWithPatch := wf.DeepCopy()
+		wfWithPatch.Spec.PodSpecPatch = `{"containers":[{"name":"main","securityContext":{"privileged":true}}]}`
+		cancel, controller := newController(wfWithPatch, wfTmpl)
+		defer cancel()
+
+		controller.Config.WorkflowRestrictions = &config.WorkflowRestrictions{
+			TemplateReferencing: config.TemplateReferencingStrict,
+		}
+		woc := newWorkflowOperationCtx(wfWithPatch, controller)
+		woc.operate(t.Context())
+		assert.Equal(t, wfv1.WorkflowError, woc.wf.Status.Phase)
+		assert.Contains(t, woc.wf.Status.Message, "PodSpecPatch")
+		assert.Contains(t, woc.wf.Status.Message, "not permitted")
+	})
+
+	t.Run("Secure rejects podSpecPatch", func(t *testing.T) {
+		wfWithPatch := wf.DeepCopy()
+		wfWithPatch.Spec.PodSpecPatch = `{"containers":[{"name":"main","securityContext":{"runAsUser":0}}]}`
+		cancel, controller := newController(wfWithPatch, wfTmpl)
+		defer cancel()
+
+		controller.Config.WorkflowRestrictions = &config.WorkflowRestrictions{
+			TemplateReferencing: config.TemplateReferencingSecure,
+		}
+		woc := newWorkflowOperationCtx(wfWithPatch, controller)
+		woc.operate(t.Context())
+		assert.Equal(t, wfv1.WorkflowError, woc.wf.Status.Phase)
+		assert.Contains(t, woc.wf.Status.Message, "PodSpecPatch")
+		assert.Contains(t, woc.wf.Status.Message, "not permitted")
+	})
+
+	t.Run("Strict rejects ServiceAccountName", func(t *testing.T) {
+		wfCopy := wf.DeepCopy()
+		wfCopy.Spec.ServiceAccountName = "admin"
+		cancel, controller := newController(wfCopy, wfTmpl)
+		defer cancel()
+
+		controller.Config.WorkflowRestrictions = &config.WorkflowRestrictions{
+			TemplateReferencing: config.TemplateReferencingStrict,
+		}
+		woc := newWorkflowOperationCtx(wfCopy, controller)
+		woc.operate(t.Context())
+		assert.Equal(t, wfv1.WorkflowError, woc.wf.Status.Phase)
+		assert.Contains(t, woc.wf.Status.Message, "ServiceAccountName")
+	})
+
+	t.Run("Strict rejects SecurityContext", func(t *testing.T) {
+		wfCopy := wf.DeepCopy()
+		wfCopy.Spec.SecurityContext = &apiv1.PodSecurityContext{}
+		cancel, controller := newController(wfCopy, wfTmpl)
+		defer cancel()
+
+		controller.Config.WorkflowRestrictions = &config.WorkflowRestrictions{
+			TemplateReferencing: config.TemplateReferencingStrict,
+		}
+		woc := newWorkflowOperationCtx(wfCopy, controller)
+		woc.operate(t.Context())
+		assert.Equal(t, wfv1.WorkflowError, woc.wf.Status.Phase)
+		assert.Contains(t, woc.wf.Status.Message, "SecurityContext")
+	})
+
+	t.Run("Strict rejects Templates", func(t *testing.T) {
+		wfCopy := wf.DeepCopy()
+		wfCopy.Spec.Templates = []wfv1.Template{{Name: "injected"}}
+		cancel, controller := newController(wfCopy, wfTmpl)
+		defer cancel()
+
+		controller.Config.WorkflowRestrictions = &config.WorkflowRestrictions{
+			TemplateReferencing: config.TemplateReferencingStrict,
+		}
+		woc := newWorkflowOperationCtx(wfCopy, controller)
+		woc.operate(t.Context())
+		assert.Equal(t, wfv1.WorkflowError, woc.wf.Status.Phase)
+		assert.Contains(t, woc.wf.Status.Message, "Templates")
+	})
+
+	t.Run("Strict rejects Volumes", func(t *testing.T) {
+		wfCopy := wf.DeepCopy()
+		wfCopy.Spec.Volumes = []apiv1.Volume{{Name: "secret-vol"}}
+		cancel, controller := newController(wfCopy, wfTmpl)
+		defer cancel()
+
+		controller.Config.WorkflowRestrictions = &config.WorkflowRestrictions{
+			TemplateReferencing: config.TemplateReferencingStrict,
+		}
+		woc := newWorkflowOperationCtx(wfCopy, controller)
+		woc.operate(t.Context())
+		assert.Equal(t, wfv1.WorkflowError, woc.wf.Status.Phase)
+		assert.Contains(t, woc.wf.Status.Message, "Volumes")
+	})
+
+	t.Run("Strict rejects HostNetwork", func(t *testing.T) {
+		wfCopy := wf.DeepCopy()
+		hostNet := true
+		wfCopy.Spec.HostNetwork = &hostNet
+		cancel, controller := newController(wfCopy, wfTmpl)
+		defer cancel()
+
+		controller.Config.WorkflowRestrictions = &config.WorkflowRestrictions{
+			TemplateReferencing: config.TemplateReferencingStrict,
+		}
+		woc := newWorkflowOperationCtx(wfCopy, controller)
+		woc.operate(t.Context())
+		assert.Equal(t, wfv1.WorkflowError, woc.wf.Status.Phase)
+		assert.Contains(t, woc.wf.Status.Message, "HostNetwork")
+	})
+
+	t.Run("No restrictions allows podSpecPatch", func(t *testing.T) {
+		wfWithPatch := wf.DeepCopy()
+		wfWithPatch.Spec.PodSpecPatch = `{"containers":[{"name":"main","resources":{"limits":{"cpu":"1"}}}]}`
+		cancel, controller := newController(wfWithPatch, wfTmpl)
+		defer cancel()
+
+		controller.Config.WorkflowRestrictions = nil
+		woc := newWorkflowOperationCtx(wfWithPatch, controller)
+		woc.operate(t.Context())
+		assert.Equal(t, wfv1.WorkflowRunning, woc.wf.Status.Phase)
+	})
+
+	t.Run("Allowed fields pass in Strict mode", func(t *testing.T) {
+		wfCopy := wf.DeepCopy()
+		// Set allowed fields only - entrypoint must match one defined in the template
+		wfCopy.Spec.Entrypoint = "whalesay-template"
+		wfCopy.Spec.Shutdown = wfv1.ShutdownStrategyTerminate
+		cancel, controller := newController(wfCopy, wfTmpl)
+		defer cancel()
+
+		controller.Config.WorkflowRestrictions = &config.WorkflowRestrictions{
+			TemplateReferencing: config.TemplateReferencingStrict,
+		}
+		woc := newWorkflowOperationCtx(wfCopy, controller)
+		woc.operate(t.Context())
+		// Shutdown=Terminate means it won't reach Running, but it shouldn't be Error
+		assert.NotEqual(t, wfv1.WorkflowError, woc.wf.Status.Phase)
+	})
+
+	t.Run("Without disallowed fields still works in Strict mode", func(t *testing.T) {
+		cancel, controller := newController(wf, wfTmpl)
+		defer cancel()
+
+		controller.Config.WorkflowRestrictions = &config.WorkflowRestrictions{
+			TemplateReferencing: config.TemplateReferencingStrict,
+		}
+		woc := newWorkflowOperationCtx(wf, controller)
+		woc.operate(t.Context())
+		assert.Equal(t, wfv1.WorkflowRunning, woc.wf.Status.Phase)
+	})
+}
+
 var workflowStatusMetric = `
 metadata:
   name: retry-to-completion-rngcr
