@@ -1,10 +1,8 @@
 module github.com/argoproj/argo-workflows/v3
 
-go 1.26
+go 1.26.3
 
 godebug fips140=on
-
-toolchain go1.26.3
 
 require (
 	cloud.google.com/go/storage v1.50.0
