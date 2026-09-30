@@ -1,18 +1,15 @@
 owners:
   - accorvin
   - dsp-developers
-  - gmfrasca
   - HumairAK
   - mprahl
   - terrytangyuan
 approvers:
   - accorvin
   - dsp-developers
-  - gmfrasca
   - HumairAK
   - mprahl
 reviewers:
-  - gmfrasca
   - hbelmiro
   - HumairAK
   - mprahl
