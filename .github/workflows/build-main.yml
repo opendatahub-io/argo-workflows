@@ -29,7 +29,7 @@ env:
   QUAY_TOKEN: ${{ secrets.QUAY_PASSWORD }}
 jobs:
   build-image:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     strategy:
