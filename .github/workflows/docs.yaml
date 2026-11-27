@@ -20,7 +20,9 @@ permissions:
 
 jobs:
   docs:
-    runs-on: ubuntu-latest
+    # Pinned: Python 3.9 is not available on the Ubuntu 26.04 runner image,
+    # and this job requires it. Revisit when the docs build moves off 3.9.
+    runs-on: ubuntu-24.04
     if: >
       (
         github.event_name == 'issue_comment' &&
